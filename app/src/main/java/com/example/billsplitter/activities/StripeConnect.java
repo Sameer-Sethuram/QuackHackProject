@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import android.view.View.OnClickListener;
 
 import com.example.billsplitter.R;
 
@@ -21,12 +25,16 @@ import okhttp3.FormBody;
 import org.json.JSONObject;
 
 
-public class StripeConnect extends AppCompatActivity{
+public class StripeConnect extends AppCompatActivity implements OnClickListener {
     private static final String TAG = StripeConnect.class.getCanonicalName();
 
     private static final String STRIPE_API_KEY = "sk_test_51R83Nf08Ddkfxai7rwFVfVdfo8UKD12u1tlO1gkk8ajYfMWObENYajo7RZ82Tfm5VDlutrCNfUs5QCmGkDeBOowe006PUPKOKk";
-    private static final String STRIPE_CLIENT_KEY = "ca_S27fa4MxGhtMoSeS783TvDpBzU2QUhtf";
-    private static final String REDIRECT_URI = "quackhackproject://stripe/oauth/callback";
+    private static final String STRIPE_CLIENT_KEY = "ca_S2BvJnaFjAEo2mFQNqrwL3sYizOLnZpr";
+    private static final String REDIRECT_URI = "https://owenungaro.com/quackhackathon/";
+
+    private EditText textbox;
+
+    private String code = "code";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +59,13 @@ public class StripeConnect extends AppCompatActivity{
         } else {
             String oauthUrl = generateOAuthUrl();
             Log.d(TAG, "OAuth Connect URL: " + oauthUrl);
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(oauthUrl));
+            startActivity(browserIntent);
         }
+
+        textbox = findViewById(R.id.code_text);
+        Button button = findViewById(R.id.authentication);
+        button.setOnClickListener(this);
     }
 
     //Creates OAuth URL to redirect users to Stripe
@@ -98,6 +112,13 @@ public class StripeConnect extends AppCompatActivity{
                 Log.e(TAG, "OAuth token exchange failed.", e);
             }
         }).start();
+    }
+
+    @Override
+    public void onClick(View v){
+        String inputCode = textbox.getText().toString();
+        this.code = inputCode;
+        handleOAuthCallback(inputCode);
     }
 
 }

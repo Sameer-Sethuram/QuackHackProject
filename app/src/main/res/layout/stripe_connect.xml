@@ -7,4 +7,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.StripeConnect">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="500dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/code"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/code_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:hint="@string/codeHint"
+            android:inputType="text"
+            android:singleLine="true" />
+    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/authentication"
+        android:text="@string/authenticate"
+        />
 </LinearLayout>

@@ -10,4 +10,7 @@
     <string name="calculate">Calculate Balances</string>
     <string name="view_users">View Users</string>
     <string name="test">Test</string>
+    <string name="code">Code:</string>
+    <string name="codeHint">Code From Website</string>
+    <string name="authenticate">Authenticate</string>
 </resources>
