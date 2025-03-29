@@ -9,5 +9,5 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 @Dao
-public class UserDao {
+public abstract class UserDao {
 }
