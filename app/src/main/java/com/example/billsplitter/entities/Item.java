@@ -10,16 +10,18 @@ public class Item {
     @PrimaryKey(autoGenerate = true)
     public int itemId;
     public int itemBillId;
-    public double amount;
+    public double base_amount;
+    public double total_amount;
     public int purchaserId;
 
     public Item(){
 
     }
-    public Item(int itemId, int itemBillId, double amount, int purchaserId){
+    public Item(int itemId, int itemBillId, double base_amount, int purchaserId){
         this.itemId = itemId;
         this.itemBillId = itemBillId;
-        this.amount = amount;
+        this.base_amount = base_amount;
+        this.total_amount = -1;
         this.purchaserId = purchaserId;
     }
 }
