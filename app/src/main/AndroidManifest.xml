@@ -31,6 +31,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+                android:name=".activities.StripeOAuthCallbackActivity"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!--Custom URI scheme for redirect-->
+                <data android:scheme="quackhackproject" android:host="stripe" android:path="/oauth/callback" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
