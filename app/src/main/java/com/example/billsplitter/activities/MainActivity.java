@@ -1,4 +1,4 @@
-package com.example.billsplitter.activities.ui;
+package com.example.billsplitter.activities;
 
 import android.os.Bundle;
 
