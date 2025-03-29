@@ -9,13 +9,13 @@ We are given a list of items, the total, and the subtotal.
 
 public class Algorithm {
 
-    public static Item[] algorithm(boolean equalSplit, double subtotal, double total, int num_people, Item[] billItems) {
-        Item[] return_array = billItems;
+    public static Item[] algorithm(boolean equalSplit, double subtotal, double total, Item[] billItems) {
+        Item[] return_array = new Item[billItems.length];
         Item currentItem;
         if (equalSplit) {
             for (int i = 0; i < billItems.length; i++) {
                 currentItem = billItems[i];
-                currentItem.total_amount = currentItem.base_amount + Math.ceil((total - subtotal) / num_people * 100) / 100.0;
+                currentItem.total_amount = currentItem.base_amount + Math.ceil((total - subtotal) / billItems.length * 100) / 100.0;
                 return_array[i] = currentItem;
             }
         } else {
@@ -33,10 +33,11 @@ public class Algorithm {
         }
         if (currTotal >= total) {
             return return_array;
-        } else {
-            Log.e(Algorithm.java, "Calculation failure!"); // Prints "Calculation failure!" if the calculation are not correct.
-            return [];
+        }
+        else {
+            return new Item[0];
         }
     }
 
 }
+
