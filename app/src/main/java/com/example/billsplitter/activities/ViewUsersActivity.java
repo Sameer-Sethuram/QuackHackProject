@@ -1,4 +1,6 @@
 package com.example.billsplitter.activities;
 
-public class ViewUsersActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ViewUsersActivity extends AppCompatActivity {
 }

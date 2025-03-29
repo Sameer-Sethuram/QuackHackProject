@@ -15,12 +15,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ListView;
 import android.widget.Toolbar;
 
 import com.example.billsplitter.R;
+import com.example.billsplitter.ui.BillAdapter;
 
 
 public class MainActivity extends AppCompatActivity implements OnClickListener{
+
+    private static final String TAG = MainActivity.class.getCanonicalName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        BillAdapter billAdapter = new BillAdapter(this);
+        ListView billList = findViewById(R.id.bill_list);
+        billList.setAdapter(billAdapter);
 
     }
 
@@ -54,11 +61,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         int itemId = item.getItemId();
         Intent intent;
         if(itemId==R.id.login){
-            intent = new Intent(this, LoginActivity.class);
+            intent = new Intent(this, StripeConnect.class);
+            startActivity(intent);
             return true;
         }else if(itemId==R.id.view_users){
+            intent = new Intent(this, ViewUsersActivity.class);
+            startActivity(intent);
             return true;
         }else if(itemId==R.id.add_bill){
+            intent = new Intent(this, ViewUsersActivity.class);
+            startActivity(intent);
             return true;
         }else{
             return false;
