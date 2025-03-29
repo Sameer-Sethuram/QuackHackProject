@@ -13,4 +13,6 @@ public abstract class UserDao {
 
     @Query("SELECT * FROM user");
     public abstract LiveData<List<User>> fetchAllUsers();
+
+    
 }
