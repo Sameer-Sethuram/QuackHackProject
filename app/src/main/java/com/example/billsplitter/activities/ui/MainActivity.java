@@ -1,4 +1,4 @@
-package com.example.billsplitter.activities;
+package com.example.billsplitter.activities.ui;
 
 import android.os.Bundle;
 
@@ -8,9 +8,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.view.View;
+import android.view.View.OnClickListener;
+
 import com.example.billsplitter.R;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +26,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

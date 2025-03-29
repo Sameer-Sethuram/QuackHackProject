@@ -8,6 +8,12 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
+import com.example.billsplitter.entities.Bill;
+
+import java.util.List;
+
 @Dao
-public class BillDao {
+public abstract class BillDao {
+    @Query("SELECT * FROM bill")
+    public abstract LiveData<List<Bill>> fetchAllBills();
 }

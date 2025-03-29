@@ -1,13 +1,25 @@
 package com.example.billsplitter.entities;
 
-public class Item {
-    private String item_name;
-    private double item_cost;
-    private String user_id;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-    public item(String in, double c, String uid) {
-        this.item_name = in;
-        this.item_cost = c;
-        this.user_id = uid;
+@Entity(foreignKeys = @ForeignKey(entity = Bill.class, onDelete = ForeignKey.CASCADE, parentColumns = "billId", childColumns = "itemBillId"), indices = @Index("itemBillId"))
+public class Item {
+    @PrimaryKey(autoGenerate = true)
+    public int itemId;
+    public int itemBillId;
+    public double amount;
+    public int purchaserId;
+
+    public Item(){
+
+    }
+    public Item(int itemId, int itemBillId, double amount, int purchaserId){
+        this.itemId = itemId;
+        this.itemBillId = itemBillId;
+        this.amount = amount;
+        this.purchaserId = purchaserId;
     }
 }
