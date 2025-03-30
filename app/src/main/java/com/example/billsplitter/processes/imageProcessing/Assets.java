@@ -34,8 +34,18 @@ public class Assets {
     }
 
     @NonNull
+    public static File getIntermediaryProcessDir(@NonNull Context context)
+    {
+        File dir = new File(getLocalDir(context), "preProcess");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        return dir;
+    }
+
+    @NonNull
     public static File getImageFile(@NonNull Context context) {
-        return new File(getLocalDir(context), "sample.jpg");
+        return new File(getLocalDir(context), "receipt2.jpg");
     }
 
     @Nullable
@@ -62,6 +72,8 @@ public class Assets {
         String[] filesToExtract = new String[]{
                 "eng.traineddata",
                 "sample.jpg",
+                "receipt1.png",
+                "receipt2.jpg"
         };
         for (String assetName : filesToExtract) {
             final File targetFile;

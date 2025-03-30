@@ -6,7 +6,15 @@ import java.util.Locale;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.example.billsplitter.entities.Item;
 import com.googlecode.tesseract.android.TessBaseAPI;
+
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.core.Size;
+
 public class ImageScraper
 {
     private static final String TAG = "ImageScraper";
@@ -15,13 +23,33 @@ public class ImageScraper
 
     private boolean tessInit;
 
-    private volatile boolean stopped;
-
     private volatile boolean tessProcessing;
 
-    private volatile boolean recycleAfterProcessing;
-
     private final Object recycleLock = new Object();
+
+    //Central stuff
+    public ImageScraper()
+    {
+        if (!OpenCVLoader.initDebug()) {
+            Log.e("OpenCV", "ImageScraper: Unable to load OpenCV!");
+        }
+        else {
+            Log.d("OpenCV", "ImageScraper: OpenCV loaded Successfully!");
+        }
+    }
+
+    public Item[] getBillItemsFromImage(File imagePath, File IntermediaryPath)
+    {
+        if (!tessInit) {
+            Log.e(TAG, "ImageScraper: Tesseract is not initialized!");
+            return null;
+        }
+        File processedImage = preProcess(imagePath, IntermediaryPath);
+        recognizeImage(processedImage);
+        return null;
+    }
+
+    //Tesseract OCR
 
     public void initTesseract(String dataPath, String language, int engineMode) {
         Log.i(TAG, "Initializing Tesseract with: dataPath = [" + dataPath + "], " +
@@ -33,7 +61,7 @@ public class ImageScraper
             Log.e(TAG, "Cannot initialize Tesseract:", e);
         }
     }
-    public void recognizeImage( File imagePath) {
+    private void recognizeImage(File imagePath) {
         if (!tessInit) {
             Log.e(TAG, "recognizeImage: Tesseract is not initialized");
             return;
@@ -45,7 +73,6 @@ public class ImageScraper
         tessProcessing = true;
 
         Log.d(TAG, "recognizeImage: Processing Started");
-        stopped = false;
 
         // Start process in another thread
         new Thread(() -> {
@@ -54,29 +81,12 @@ public class ImageScraper
             // tessApi.setImage(imageBitmap);
 
             // Set page segmentation mode (default is PSM_SINGLE_BLOCK)
-            tessApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO_OSD);
+            tessApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_SINGLE_COLUMN);
 
             long startTime = SystemClock.uptimeMillis();
 
-            // Use getHOCRText(0) method to trigger recognition with progress notifications and
-            // ability to cancel ongoing processing.
             tessApi.getHOCRText(0);
-
-            // At this point the recognition has completed (or was interrupted by calling stop())
-            // and we can get the results we want. In this case just normal UTF8 text.
-            //
-            // Note that calling only this method (without the getHOCRText() above) would also
-            // trigger the recognition and return the same result, but we would received no progress
-            // notifications and we wouldn't be able to stop() the ongoing recognition.
             String text = tessApi.getUTF8Text();
-
-            // Alternatively we can get resulting text filtered based on confidence threshold.
-            // Note this call internally calls getResultIterator() which means we need to call
-            // getHOCRText or getUTF8Text method before to make sure there are results to process.
-            //String text = tessApi.getConfidentText(40, TessBaseAPI.PageIteratorLevel.RIL_WORD);
-
-            // We can free up the recognition results and any stored image data in the tessApi
-            // if we don't need them anymore.
             tessApi.clear();
 
             // Publish the results
@@ -86,12 +96,36 @@ public class ImageScraper
 
             synchronized (recycleLock) {
                 tessProcessing = false;
-
-                // Recycle the instance here if the view model is already destroyed
-                if (recycleAfterProcessing) {
-                    tessApi.recycle();
-                }
+                tessApi.recycle();
             }
         }).start();
+    }
+
+    //Pre Processing Stuff
+
+    private File preProcess(File imagePath, File intermediateDirectory)
+    {
+        Log.i(TAG, "preProcess: Started preProcess");
+
+        Mat img = new Mat();
+        img = Imgcodecs.imread(imagePath.getAbsolutePath());
+        Imgcodecs.imwrite(String.format("%s/trueImage.png", intermediateDirectory), img);
+
+        Mat imgGray = new Mat();
+        Imgproc.cvtColor(img, imgGray, Imgproc.COLOR_BGR2GRAY);
+        Imgcodecs.imwrite(String.format("%s/GreyImage.png", intermediateDirectory), imgGray);
+
+        Mat imgGaussianBlur = new Mat();
+        Imgproc.GaussianBlur(imgGray,imgGaussianBlur,new Size(3, 3),0);
+        Imgcodecs.imwrite(String.format("%s/GaussianImage.png", intermediateDirectory), imgGaussianBlur);
+
+        Mat imgAdaptiveThreshold = new Mat();
+        Imgproc.adaptiveThreshold(imgGaussianBlur, imgAdaptiveThreshold, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C ,Imgproc.THRESH_BINARY, 99, 4);
+        Imgcodecs.imwrite(String.format("%s/AdaptiveThreshold.png", intermediateDirectory), imgAdaptiveThreshold);
+
+        File preProcessedImageFile = new File(intermediateDirectory, "AdaptiveThreshold.png");
+        Log.i(TAG, String.format("preProcess: final preprocess image written to %s", preProcessedImageFile.getAbsolutePath()));
+
+        return preProcessedImageFile;
     }
 }

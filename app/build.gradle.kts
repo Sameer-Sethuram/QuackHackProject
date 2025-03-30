@@ -51,5 +51,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     annotationProcessor(libs.room.compiler)
     implementation(libs.tesseract4android) {exclude(group = "com.github.adaptech-cz.Tesseract4Android", module = "tesseract4android-openmp")}
+    implementation(libs.openCV)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
