@@ -17,6 +17,8 @@ public class Item {
     public double base_amount;
     public double total_amount;
     public int purchaserId;
+    public int owerId;
+    public boolean splitEvenly = false;
     public String displayName;
 
     public Item(){

@@ -114,5 +114,6 @@ public class ViewBillActivity extends AppCompatActivity implements View.OnClickL
         CheckBox tip_even_box = findViewById(R.id.tip_even);
         bill.taxEven = tax_even_box.isChecked();
         bill.tipEven = tip_even_box.isChecked();
+        tabdb.billDao().upsert(bill);
     }
 }

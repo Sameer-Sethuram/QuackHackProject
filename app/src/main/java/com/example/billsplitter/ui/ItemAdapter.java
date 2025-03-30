@@ -17,7 +17,7 @@ public class ItemAdapter extends ExtendedAdapter<Item> {
     @Override
     public void setFields(Item element, View view) {
         TextView itemName = view.findViewById(R.id.item_name);
-        itemName.setText(element.itemName);
+        itemName.setText(element.displayName);
         TextView balance = view.findViewById(R.id.item_cost);
         balance.setText(String.valueOf(element.base_amount));
     }
