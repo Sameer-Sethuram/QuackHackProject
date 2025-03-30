@@ -45,14 +45,18 @@
             android:hint="@string/bill_name"
             android:inputType="text"
             android:singleLine="true" />
-        <Button
-            android:id="@+id/add_bill_button"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:text="@string/next"
-            android:textAppearance="?android:attr/textAppearanceMedium"  />
     </LinearLayout>
-
+    <Button
+        android:id="@+id/add_bill_manual_button"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/manual"
+        android:textAppearance="?android:attr/textAppearanceMedium"  />
+    <Button
+        android:id="@+id/add_bill_auto_button"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/auto"
+        android:textAppearance="?android:attr/textAppearanceMedium"  />
 
 </LinearLayout>

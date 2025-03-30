@@ -83,7 +83,7 @@ public class ViewBillActivity extends AppCompatActivity implements View.OnClickL
         TextView taxEven = findViewById(R.id.tax_even);
         taxEven.setText(getString(R.string.view_bill_tax, bill.tax));
         TextView tipEven = findViewById(R.id.tip_even);
-        tipEven.setText(getString(R.string.view_bill_tax, bill.tax));
+        tipEven.setText(getString(R.string.view_bill_tip, bill.tip));
 
         Button button = findViewById(R.id.confirm_button);
         button.setOnClickListener(this);
