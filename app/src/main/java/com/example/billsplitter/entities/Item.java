@@ -30,12 +30,6 @@ public class Item {
         this.displayName = displayName;
     }
 
-    public Item(int itemBillId, double base_amount, int purchaserId) {
-        this.itemBillId = itemBillId;
-        this.base_amount = base_amount;
-        this.purchaserId = purchaserId;
-    }
-
     public Item(int itemBillId, double base_amount, String displayName) {
         this.itemBillId = itemBillId;
         this.base_amount = base_amount;
