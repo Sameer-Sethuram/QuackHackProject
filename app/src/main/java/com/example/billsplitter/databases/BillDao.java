@@ -18,7 +18,7 @@ public abstract class BillDao {
      * Get all the bills in the database.
      * @return
      */
-    @Query("SELECT * FROM bill");
+    @Query("SELECT * FROM bill")
     public abstract LiveData<List<Bill>> fetchAllBills();
 
     @Insert
@@ -29,7 +29,7 @@ public abstract class BillDao {
 
     @Transaction
     public void upsert(Bill bill) {
-        long id = bill.billId;
+        int id = bill.billId;
         if (id == 0) {
             insert(bill);
         }

@@ -38,7 +38,7 @@ public abstract class ItemDao {
      */
     @Transaction
     public void upsert(Item item) {
-        long id = item.itemId;
+        int id = item.itemId;
         if (id == 0) {
             // TODO
             insert(item);
@@ -48,7 +48,5 @@ public abstract class ItemDao {
             update(item);
         }
     }
-
-}
 
 }

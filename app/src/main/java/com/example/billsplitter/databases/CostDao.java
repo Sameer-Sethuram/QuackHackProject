@@ -14,12 +14,10 @@ import java.util.List;
 @Dao
 public abstract class CostDao {
 
-    @Query("SELECT * FROM cost");
+    @Query("SELECT * FROM cost")
     public abstract LiveData<List<Cost>> fetchAllCosts();
 
     @Query("SELECT * FROM cost WHERE billId = :receipt")
     public abstract LiveData<List<Cost>> fetchCostsFromBill(int receipt);
-
-
 
 }
