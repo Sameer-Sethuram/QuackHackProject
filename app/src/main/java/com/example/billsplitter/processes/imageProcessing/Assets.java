@@ -44,13 +44,8 @@ public class Assets {
     }
 
     @NonNull
-    public static File getImageFile(@NonNull Context context) {
-        return new File(getLocalDir(context), "receipt2.jpg");
-    }
-
-    @Nullable
-    public static Bitmap getImageBitmap(@NonNull Context context) {
-        return BitmapFactory.decodeFile(getImageFile(context).getAbsolutePath());
+    public static File getImageFile(@NonNull Context context, @NonNull String childname) {
+        return new File(getLocalDir(context), childname);
     }
 
     public static void extractAssets(@NonNull Context context) {
@@ -72,8 +67,10 @@ public class Assets {
         String[] filesToExtract = new String[]{
                 "eng.traineddata",
                 "sample.jpg",
-                "receipt1.png",
-                "receipt2.jpg"
+                "receipt1.jpg",
+                "receipt2.jpg",
+                "receipt3.jpg",
+                "receipt4.jpg"
         };
         for (String assetName : filesToExtract) {
             final File targetFile;
@@ -84,9 +81,7 @@ public class Assets {
             } else {
                 targetFile = new File(localDir, assetName);
             }
-            if (!targetFile.exists()) {
-                copyFile(am, assetName, targetFile);
-            }
+            copyFile(am, assetName, targetFile);
         }
     }
 

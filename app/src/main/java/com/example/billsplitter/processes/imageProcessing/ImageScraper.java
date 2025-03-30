@@ -1,7 +1,10 @@
 package com.example.billsplitter.processes.imageProcessing;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.os.SystemClock;
 import android.util.Log;
@@ -14,39 +17,86 @@ import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Size;
+import org.opencv.photo.Photo;
+
+/*
+    How To Use:
+
+    Import:
+    import com.example.billsplitter.processes.imageProcessing.*;
+    import com.googlecode.tesseract.android.TessBaseAPI;
+
+    Then Actual Code:
+    Assets.extractAssets(getApplicationContext());
+    ImageScraper ourScraper = new ImageScraper();
+    ourScraper.initTesseract(Assets.getTessDataPath(getApplicationContext()),"eng", TessBaseAPI.OEM_LSTM_ONLY);
+    ourScraper.getBillItemsFromImage(Assets.getImageFile(getApplicationContext(), "receipt3.jpg"), Assets.getIntermediaryProcessDir(getApplicationContext()), 0);
+
+    Note:
+    Calls above must be done in activity context.
+    The "receipt3.jpg" can be replaced with the name of any image file as long as it is present in the app's file directory.
+    getBillItemsFromImage is multi-threaded, therefore you must wait until ourScraper.billItems is initialized and then
+    access the Items array with ourScraper.billItems as the thread will run independently.
+ */
 
 public class ImageScraper
 {
     private static final String TAG = "ImageScraper";
+    private static final Pattern REGEX = Pattern.compile("[0-9]+ [a-zA-Z]*.+ [$0-9]+[.][0-9]+");
+    private static final Pattern SUBNAMEREGEX = Pattern.compile("(?<=\\d\\s)(.*?)(?=\\s*\\$)");
+    private static final Pattern SUBCOSTREGEX = Pattern.compile("[0-9]+[.][0-9]+");
 
     private final TessBaseAPI tessApi = new TessBaseAPI();
 
     private boolean tessInit;
 
-    private volatile boolean tessProcessing;
+    private volatile boolean processing;
+    public volatile Item[] billItems;
 
-    private final Object recycleLock = new Object();
+    private final Object processLock = new Object();
 
     //Central stuff
     public ImageScraper()
     {
         if (!OpenCVLoader.initDebug()) {
-            Log.e("OpenCV", "ImageScraper: Unable to load OpenCV!");
+            Log.e(TAG, "ImageScraper: Unable to load OpenCV!");
         }
         else {
-            Log.d("OpenCV", "ImageScraper: OpenCV loaded Successfully!");
+            Log.d(TAG, "ImageScraper: OpenCV loaded Successfully!");
         }
     }
 
-    public Item[] getBillItemsFromImage(File imagePath, File IntermediaryPath)
+    public void getBillItemsFromImage(File imagePath, File IntermediaryPath, int billID)
     {
         if (!tessInit) {
-            Log.e(TAG, "ImageScraper: Tesseract is not initialized!");
-            return null;
+            Log.e(TAG, "getBillItemsFromImage: Tesseract is not initialized!");
+            return;
         }
-        File processedImage = preProcess(imagePath, IntermediaryPath);
-        recognizeImage(processedImage);
-        return null;
+        if (processing) {
+            Log.e(TAG, "getBillItemsFromImage: Processing is in progress!");
+            return;
+        }
+        processing = true;
+        new Thread(() -> {
+            long startTime = SystemClock.uptimeMillis();
+
+            Log.i(TAG, "getBillItemsFromImage: Processing started");
+
+            File processedImage = preProcess(imagePath, IntermediaryPath);
+            String text = recognizeImage(processedImage);
+            Item[] outputItems = getItemsFromStr(text, billID);
+
+            long duration = SystemClock.uptimeMillis() - startTime;
+
+            Log.i(TAG, String.format(Locale.ENGLISH, "getBillItemsFromImage: Processing completed in %.3fs.", (duration / 1000f)));
+
+            synchronized(processLock)
+            {
+                billItems = outputItems;
+                processing = false;
+            }
+        }).start();
+        return;
     }
 
     //Tesseract OCR
@@ -61,44 +111,29 @@ public class ImageScraper
             Log.e(TAG, "Cannot initialize Tesseract:", e);
         }
     }
-    private void recognizeImage(File imagePath) {
+    private String recognizeImage(File imagePath) {
         if (!tessInit) {
             Log.e(TAG, "recognizeImage: Tesseract is not initialized");
-            return;
+            return null;
         }
-        if (tessProcessing) {
-            Log.e(TAG, "recognizeImage: Processing is in progress");
-            return;
-        }
-        tessProcessing = true;
 
-        Log.d(TAG, "recognizeImage: Processing Started");
+        Log.i(TAG, "recognizeImage: Image interpretation started");
 
-        // Start process in another thread
-        new Thread(() -> {
-            tessApi.setImage(imagePath);
-            // Or set it as Bitmap, Pix,...
-            // tessApi.setImage(imageBitmap);
+        tessApi.setImage(imagePath);
+        // Or set it as Bitmap, Pix,...
+        // tessApi.setImage(imageBitmap);
 
-            // Set page segmentation mode (default is PSM_SINGLE_BLOCK)
-            tessApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_SINGLE_COLUMN);
+        // Set page segmentation mode (default is PSM_SINGLE_BLOCK)
+        tessApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_SINGLE_COLUMN);
 
-            long startTime = SystemClock.uptimeMillis();
+        tessApi.getHOCRText(0);
+        String text = tessApi.getUTF8Text();
+        tessApi.clear();
 
-            tessApi.getHOCRText(0);
-            String text = tessApi.getUTF8Text();
-            tessApi.clear();
+        Log.i(TAG, "recognizeImage: Image interpretation completed");
+        Log.d(TAG, String.format(Locale.ENGLISH, "recognizeImage: Output: \n%s", text));
 
-            // Publish the results
-            Log.d(TAG, "recognizeImage: " + text);
-            long duration = SystemClock.uptimeMillis() - startTime;
-            Log.d(TAG, String.format(Locale.ENGLISH, "recognizeImage: Completed in %.3fs.", (duration / 1000f)));
-
-            synchronized (recycleLock) {
-                tessProcessing = false;
-                tessApi.recycle();
-            }
-        }).start();
+        return text;
     }
 
     //Pre Processing Stuff
@@ -119,13 +154,48 @@ public class ImageScraper
         Imgproc.GaussianBlur(imgGray,imgGaussianBlur,new Size(3, 3),0);
         Imgcodecs.imwrite(String.format("%s/GaussianImage.png", intermediateDirectory), imgGaussianBlur);
 
-        Mat imgAdaptiveThreshold = new Mat();
-        Imgproc.adaptiveThreshold(imgGaussianBlur, imgAdaptiveThreshold, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C ,Imgproc.THRESH_BINARY, 99, 4);
-        Imgcodecs.imwrite(String.format("%s/AdaptiveThreshold.png", intermediateDirectory), imgAdaptiveThreshold);
+        Mat imgDenoised = new Mat();
+        Photo.fastNlMeansDenoising(imgGaussianBlur, imgDenoised, 30, 7, 21);
+        Imgcodecs.imwrite(String.format("%s/DenoisedImage.png", intermediateDirectory), imgDenoised);
 
-        File preProcessedImageFile = new File(intermediateDirectory, "AdaptiveThreshold.png");
+        File preProcessedImageFile = new File(intermediateDirectory, "DenoisedImage.png");
         Log.i(TAG, String.format("preProcess: final preprocess image written to %s", preProcessedImageFile.getAbsolutePath()));
 
         return preProcessedImageFile;
+    }
+
+    //Text Postprocessing
+
+    private Item[] getItemsFromStr(String inputString, int billID)
+    {
+        Log.i(TAG, "getItemsFromStr: Text postprocessing started");
+        Matcher matcher = REGEX.matcher(inputString);
+
+        ArrayList<Item> currentItemList = new ArrayList<>();
+        while (matcher.find()) {
+            Matcher matchName = SUBNAMEREGEX.matcher(matcher.group());
+            Matcher matchCost = SUBCOSTREGEX.matcher(matcher.group());
+
+            if(!matchName.find() || !matchCost.find())
+            {
+                Log.e(TAG, String.format("getItemsFromStr: Failed to identify name or cost of item: %s", matcher.group()));
+                continue;
+            }
+
+            Item curItem;
+            try {
+                curItem = new Item(billID, Double.parseDouble(matchCost.group()), matchName.group());
+            } catch (Exception e) {
+                Log.e(TAG, "getItemFromStr: Match caused exception when attempting to create item object!", e);
+                continue;
+            }
+            Log.d(TAG, String.format("getItemsFromStr: New item found: [Name: %s, Cost: %,.2f]", curItem.displayName, curItem.amount));
+            currentItemList.add(curItem);
+        }
+        Item[] returnArr = new Item[currentItemList.size()];
+        returnArr = currentItemList.toArray(returnArr);
+
+        Log.i(TAG, "getItemsFromStr: Text postprocessing completed");
+        return returnArr;
     }
 }
