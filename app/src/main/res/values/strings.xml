@@ -35,6 +35,7 @@
     <string name="view_bill_tax">Tax: %f</string>
     <string name="view_bill_tip">Tip: %f</string>
     <string name="view_bill_total">Total: %f</string>
-
+    <string name="authenticate_pay">Authenticate and Pay</string>
+    <string name="scan_photo">Scan Photo</string>
 
 </resources>
