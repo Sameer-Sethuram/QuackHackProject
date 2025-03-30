@@ -45,6 +45,7 @@ public class ImageScraper
     private static final Pattern REGEX = Pattern.compile("[0-9]+ [a-zA-Z]*.+ [$0-9]+[.][0-9]+");
     private static final Pattern SUBNAMEREGEX = Pattern.compile("(?<=\\d\\s)(.*?)(?=\\s*\\$)");
     private static final Pattern SUBCOSTREGEX = Pattern.compile("[0-9]+[.][0-9]+");
+    private static final Pattern REGEXTAX = Pattern.compile("(?i)\\btax\\s+.(\\d+\\.\\d{2})");
 
     private final TessBaseAPI tessApi = new TessBaseAPI();
 
@@ -52,8 +53,10 @@ public class ImageScraper
 
     private volatile boolean processing;
     public volatile Item[] billItems;
+    public volatile double tax;
 
     private final Object processLock = new Object();
+    private final Object taxLock = new Object();
 
     //Central stuff
     public ImageScraper()
@@ -193,6 +196,27 @@ public class ImageScraper
         }
         Item[] returnArr = new Item[currentItemList.size()];
         returnArr = currentItemList.toArray(returnArr);
+
+        Matcher taxMatch = REGEXTAX.matcher(inputString);
+
+        if(!taxMatch.find())
+        {
+            Log.e(TAG, "getItemsFromStr: Failed to find tax!");
+        }
+        else
+        {
+            double curTax = -1;
+            try{
+                curTax = Double.parseDouble(taxMatch.group(1));
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "getItemFromStr: Tax value caused an exception while being parsed!", e);
+            }
+            Log.d(TAG, String.format("getItemsFromStr: $%,.2f identified as tax", curTax));
+            synchronized (taxLock)
+            {
+                tax=curTax;
+            }
+        }
 
         Log.i(TAG, "getItemsFromStr: Text postprocessing completed");
         return returnArr;
