@@ -15,8 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.billsplitter.R;
+import com.example.billsplitter.databases.BankDao;
 import com.example.billsplitter.databases.TabDatabase;
 import com.example.billsplitter.databases.UserDao;
+import com.example.billsplitter.entities.Bank;
 import com.example.billsplitter.entities.User;
 
 public class RegisterUsersActivity extends AppCompatActivity implements OnClickListener {
@@ -46,16 +48,37 @@ public class RegisterUsersActivity extends AppCompatActivity implements OnClickL
         Button button = findViewById(R.id.register_user_button);
         button.setOnClickListener(this);
 
-
-
     }
     @Override
     public void onClick(View v){
         String name = textbox.getText().toString();
         Log.d(TAG, name);
-        User user = new User(name);
+
         UserDao userDao = tabdb.userDao();
-        userDao.upsert(user);
+        BankDao bankDao = tabdb.bankDao();
+
+        User user = new User(name);
+        int userId = (int) userDao.returnId(user);
+
+        String routingStr = getIntent().getStringExtra("ROUTING_NUMBER");
+        Log.d(TAG, "Routing Number recieved: " + routingStr);
+
+        int routingNumber = 0;
+        try {
+            routingNumber = Integer.parseInt(routingStr);
+        } catch(NumberFormatException e) {
+            Log.e(TAG, "INVALID routing number format.");
+        }
+
+        Bank bank = new Bank();
+        bank.setRoutingNumber(routingNumber);
+        bank.bankerUserId = userId;
+        bankDao.upsert(bank);
+
+        Log.d(TAG, "User inserted: name=" + user.userName + ", id=" + userId);
+        Log.d(TAG, "Bank inserted: routing=" + bank.getRoutingNumber() + ", bankerUserId=" + bank.bankerUserId);
+
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

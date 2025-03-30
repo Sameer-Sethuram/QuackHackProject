@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.billsplitter.R;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); // SEE HERE
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -54,6 +55,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
         billList.setOnItemClickListener(this);
 
+        Button calculateButton = findViewById(R.id.calculate);
+        calculateButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, StripePayment.class);
+            startActivity(intent);
+        });
+
     }
 
     @Override
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     public boolean onCreateOptionsMenu(Menu menu){
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.main_menu, menu); // SEE HERE
         Log.d("main", "create options menU!");
         return true;
     }
