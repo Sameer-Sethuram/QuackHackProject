@@ -59,7 +59,7 @@ public abstract class BillDao {
     @Transaction
     public void upsert(Bill bill) {
         int id = bill.billId;
-        if (id == -1) {
+        if (id == 0) {
             insert(bill);
         }
         else {
