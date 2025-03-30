@@ -17,8 +17,11 @@ public class Item {
     public double base_amount;
     public double total_amount;
     public int purchaserId;
+    public int owerId = -1;
 
     public String itemName;
+
+    public boolean splitEvenly = false;
 
     public Item(){
 
