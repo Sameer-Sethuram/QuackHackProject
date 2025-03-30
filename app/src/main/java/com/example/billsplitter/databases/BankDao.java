@@ -45,7 +45,7 @@ public abstract class BankDao {
     @Transaction
     public void upsert(Bank bank) {
         int id = bank.bankId;
-        if (id == -1) {
+        if (id == 0) {
             insert(bank);
         }
         else {
