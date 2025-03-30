@@ -39,7 +39,7 @@ public class ViewUsersActivity extends AppCompatActivity implements AdapterView.
             return insets;
         });
         tabdb = TabDatabase.getInstance(getApplicationContext());
-        List<User> users = tabdb.userDao().GIMMEALLTHEFUCKINGUSERS();
+        List<User> users = tabdb.userDao().getAllUsers();
 
         for (int i = 0; i < users.size(); i++) {
             List<Double> negatives = tabdb.itemDao().fetchAmountsFromOwingUserId(users.get(i).userId);

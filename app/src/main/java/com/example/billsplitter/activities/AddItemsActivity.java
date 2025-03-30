@@ -82,7 +82,6 @@ public class AddItemsActivity extends AppCompatActivity implements View.OnClickL
             tabdb.itemDao().upsert(item);
 
             bill.subtotal+=item.base_amount;
-            Log.d(TAG, "YOU FUCKIN GBITG BITYCH YOU FUICB BITCH");
 
             nametb.setText("");
             costtb.setText("");
