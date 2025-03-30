@@ -46,5 +46,5 @@
     <string name="manual">MANUAL ENTRY</string>
     <string name="auto">AUTO ENTRY</string>
     <string name="item_name_text">Enter Name</string>
-
+    <string name="selected">Selected User: %s</string>
 </resources>

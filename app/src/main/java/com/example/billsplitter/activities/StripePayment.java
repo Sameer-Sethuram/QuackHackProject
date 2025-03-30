@@ -5,17 +5,28 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.LiveData;
+
 import android.view.View.OnClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.billsplitter.R;
+import com.example.billsplitter.databases.BankDao;
 import com.example.billsplitter.databases.TabDatabase;
+import com.example.billsplitter.databases.UserDao;
+import com.example.billsplitter.entities.Bank;
+import com.example.billsplitter.entities.User;
+import com.example.billsplitter.ui.UserAdapter;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,8 +36,10 @@ import okhttp3.FormBody;
 
 import org.json.JSONObject;
 
+import java.util.List;
 
-public class StripePayment extends AppCompatActivity implements OnClickListener {
+
+public class StripePayment extends AppCompatActivity implements OnClickListener, AdapterView.OnItemClickListener {
     private static final String TAG = StripeConnect.class.getCanonicalName();
 
     private static final String STRIPE_API_KEY = "sk_test_51R83Nf08Ddkfxai7rwFVfVdfo8UKD12u1tlO1gkk8ajYfMWObENYajo7RZ82Tfm5VDlutrCNfUs5QCmGkDeBOowe006PUPKOKk";
@@ -37,17 +50,26 @@ public class StripePayment extends AppCompatActivity implements OnClickListener 
 
     private String code = "code";
 
+    private TabDatabase tabdb;
+
+    private UserAdapter userAdapter;
+    private String connectedAccountId;
+    private int amountInCents;
+
+    private User user;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.stripe_pay);
 
+        tabdb = TabDatabase.getInstance(this);
         //Checks if activity has URI
         Intent intent = getIntent();
         Uri uri = intent.getData();
 
-        if(uri != null && "quackhackproject".equals(uri.getScheme())) {
+        /*if(uri != null && "quackhackproject".equals(uri.getScheme())) {
             String authorizationCode = uri.getQueryParameter("code");
 
             //If authorization code exists, move onto next method
@@ -63,9 +85,28 @@ public class StripePayment extends AppCompatActivity implements OnClickListener 
             //Opens popup for login
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(oauthUrl));
             startActivity(browserIntent);
-        }
+        }*/
 
-        textbox = findViewById(R.id.code_text);
+        /*TextView selected = findViewById(R.id.display_selected_user);
+        if(user!=null) {
+            selected.setText(getString(R.string.selected, user.userName));
+        }else{
+            selected.setText(getString(R.string.selected, "null user"));
+        }*/
+
+        UserDao userDao = tabdb.userDao();
+//                    String userName = getIntent().getExtras().getString();
+        //User user = userDao.fetchUserByName(userName);
+        userAdapter = new UserAdapter(this);
+        ListView userList = findViewById(R.id.user_list_view);
+        userList.setAdapter(userAdapter);
+        userDao.fetchAllUsers().observe(this, usr->{
+            userAdapter.setElements(usr);
+            userAdapter.notifyDataSetChanged();
+        });
+        userList.setOnItemClickListener(this);
+
+//        textbox = findViewById(R.id.code_text);
         Button button = findViewById(R.id.authentication_pay);
         button.setOnClickListener(this);
     }
@@ -108,11 +149,15 @@ public class StripePayment extends AppCompatActivity implements OnClickListener 
                     JSONObject json = new JSONObject(responseBody);
 
                     //Extracts Stripe account ID and access token
-                    String connectedAccountId = json.getString("stripe_user_id");
+                    connectedAccountId = json.getString("stripe_user_id");
                     String accessToken = json.getString("access_token");
 
                     Log.i(TAG, "Connected account ID: " + connectedAccountId);
                     Log.i(TAG, "Access token: " + accessToken);
+
+
+
+
 
                 } else {
                     Log.e(TAG, "Stripe OAuth failed: HTTP " + response.code());
@@ -126,20 +171,20 @@ public class StripePayment extends AppCompatActivity implements OnClickListener 
 
     //Fetches bank account details (primarily routing number)
 
-    private void payConnectedUser(String senderAccountId, String recipientAccountId, int amountInCents) {
+    private void payUserToDummy(String senderConnectedAccountId, int amountInCents) {
         new Thread(() -> {
             try {
                 OkHttpClient client = new OkHttpClient();
 
-                //SET TEST AMOUNT IN CENTS!!
+                // PaymentIntent to charge the user and send to platform account
                 RequestBody requestBody = new FormBody.Builder()
-                        .add("amount", String.valueOf(amountInCents)) //Amount in cents
+                        .add("amount", String.valueOf(amountInCents))
                         .add("currency", "usd")
                         .add("payment_method_types[]", "card")
-                        .add("description", "Payment from one user to another")
+                        .add("payment_method", "pm_card_visa") // Test payment method
+                        .add("description", "User pays platform")
                         .add("confirm", "true")
-                        .add("on_behalf_of", senderAccountId)
-                        .add("transfer_data[destination]", recipientAccountId)
+                        .add("on_behalf_of", senderConnectedAccountId) // Charge on behalf of user
                         .build();
 
                 Request request = new Request.Builder()
@@ -151,39 +196,82 @@ public class StripePayment extends AppCompatActivity implements OnClickListener 
                 Response response = client.newCall(request).execute();
                 String body = response.body().string();
 
-                if(response.isSuccessful()) {
-                    Log.i(TAG, "Payment sucessful: $ " + (amountInCents / 100.0));
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "User paid platform: $" + (amountInCents / 100.0));
                     Log.d(TAG, "Response: " + body);
                 } else {
-                    Log.e(TAG, "Transfer failed. HTTP " + response.code());
-                    Log.e(TAG, "BODY: " + response.body().string());
+                    Log.e(TAG, "Payment failed. HTTP " + response.code());
+                    Log.e(TAG, "BODY: " + body);
                 }
-            } catch(Exception e) {
-                Log.e(TAG, "Error sending payment: " + e);
+
+            } catch (Exception e) {
+                Log.e(TAG, "Error processing payment to platform", e);
             }
         }).start();
     }
 
-    private void PayAllOtherUsers(String payerAccountId) {
 
-//        for(String recipientAccountId : stripeAccountList) {
-//            if(!recipientAccountId.equals(payerAccountId)) {
-//                payConnectedUser(recipientAccountId);
+//    private void payDummyToUser() {
+//        new Thread(() -> {
+//            UserDao userDao = tabdb.userDao();
+//            BankDao bankDao = tabdb.bankDao();
+//            List<User> users = userDao.fetchAllUsers().getValue();
+//
+//            for (User user : users) {
+//                // Skip dummy user
+//                if (user.userName.equals("Dummy Platform User")) continue;
+//
+//                double amountToPay = Double.parseDouble(user.amountOwed);
+//                int amountInCents = (int)(amountToPay * 100);
+//
+//                if (amountToPay > 0) {
+//                    Bank userBank = bankDao.fetchBankingWithBankId(user.userId); // Using userId to find their bank
+//                    if (userBank != null) {
+//                        String connectedAccountId = String.valueOf(userBank.getBankAccount()); // assuming this maps to Stripe ID
+//
+//                        // Now pay them from dummy/platform balance
+//                        payConnectedUser(connectedAccountId, amountInCents); // convert to cents
+//                    } else {
+//                        Log.e(TAG, "No bank account found for user ID: " + user.userId);
+//                    }
+//                }
 //            }
+//        }).start();
+//    }
+//
+//
+//    private void payAllFromDummy(List<User> userList) {
+//        String dummyPlatformAccountId = "EMPTY CHANGE";
+//        for(User user : userList) {
+//            double amount = user.amountOwed;
+//            Bank bank = bankDao.fetchBankingWithBankId(user.userId);
+//            if (amount > 0 && bank != null && bank.getBankAccount() != null && !bank.getBankAccount().isEmpty()) {
+//                payConnectedUser(bank.getBankAccount(), (int)(amount * 100));
+//            }
+//
 //        }
-        TabDatabase tabdb = TabDatabase.getInstance(getApplicationContext());
-        tabdb.userDao().fetchAllUsers().observe(this, users -> {
+//    }
 
-        });
-
-    }
 
     @Override
     public void onClick(View v) {
-        String inputCode = textbox.getText().toString();
-        this.code = inputCode;
-        textbox.setText("");
-        Log.i(TAG, "TEST WORKS!!!!");
-        PayAllOtherUsers(inputCode);
+//        String inputCode = textbox.getText().toString();
+//        this.code = inputCode;
+//        textbox.setText("");
+//        Log.i(TAG, "TEST WORKS!!!!");
+//        handleOAuthCallback(inputCode);
+
+        payUserToDummy(String.valueOf(user.userId), amountInCents);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+        user = userAdapter.getItem(position);
+        double amountToPay = user.amountOwed;
+        int amountInCents = (int)(amountToPay*100);
+
+
+
+
     }
 }
