@@ -25,7 +25,7 @@ import okhttp3.FormBody;
 import org.json.JSONObject;
 
 
-public class StripeConnect extends AppCompatActivity implements OnClickListener {
+public class StripePayment extends AppCompatActivity implements OnClickListener {
     private static final String TAG = StripeConnect.class.getCanonicalName();
 
     private static final String STRIPE_API_KEY = "sk_test_51R83Nf08Ddkfxai7rwFVfVdfo8UKD12u1tlO1gkk8ajYfMWObENYajo7RZ82Tfm5VDlutrCNfUs5QCmGkDeBOowe006PUPKOKk";
@@ -40,7 +40,7 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.stripe_connect);
+        setContentView(R.layout.stripe_pay);
 
         //Checks if activity has URI
         Intent intent = getIntent();
@@ -65,7 +65,7 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
         }
 
         textbox = findViewById(R.id.code_text);
-        Button button = findViewById(R.id.authentication);
+        Button button = findViewById(R.id.authentication_pay);
         button.setOnClickListener(this);
     }
 
@@ -112,8 +112,6 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
 
                     Log.i(TAG, "Connected account ID: " + connectedAccountId);
                     Log.i(TAG, "Access token: " + accessToken);
-                    fetchBankAccountDetails(connectedAccountId);
-                    //payConnectedUser(connectedAccountId);
 
                 } else {
                     Log.e(TAG, "Stripe OAuth failed: HTTP " + response.code());
@@ -126,86 +124,42 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
     }
 
     //Fetches bank account details (primarily routing number)
-    private void fetchBankAccountDetails(String connectedAccountId) {
-        new Thread(() -> {
-            try {
-                //Makes HTTP request
-                OkHttpClient client = new OkHttpClient();
-
-                //Stripe uses that request to connect to its external accounts API
-                Request request = new Request.Builder()
-                        .url("https://api.stripe.com/v1/accounts/" + connectedAccountId + "/external_accounts") //Calling API
-                        .addHeader("Authorization", "Bearer " + STRIPE_API_KEY) //Tells Scripe the API key
-                        .addHeader("Stripe-Account", connectedAccountId) //Tells Scripe which account you want the information from
-                        .get().build(); //GET request
-
-                Response response = client.newCall(request).execute(); //Executes HTTP Request
-
-                if(response.isSuccessful()) {
-                    String body = response.body().string(); //Reads JSON as String
-                    JSONObject json = new JSONObject(body); //Parses into JSON object
-
-                    if(json.has("data")) {
-                        JSONObject firstBank = json.getJSONArray("data").getJSONObject(0); //Gets first bank from list
-                        String routingNumber = firstBank.getString("routing_number");
-                        String lastFour = firstBank.getString("last4");
-                        String bankName = firstBank.getString("bank_name");
-
-                        Log.i(TAG, "Bank:" + bankName);
-                        Log.i(TAG, "Routing Number: " + routingNumber);
-                        Log.i(TAG, "Last 4 digits: " + lastFour);
-
-                        Intent intent = new Intent(this, RegisterUsersActivity.class);
-                        intent.putExtra("ROUTING_NUMBER", routingNumber);
-                        startActivity(intent);
-
-                    } else {
-                        Log.w(TAG, "No bank accounts found.");
-                    }
-                } else {
-                    Log.e(TAG, "Failed to fetch bank details. HTTP " + response.code());
-                }
-            } catch(Exception e) {
-                Log.e(TAG, "Error fetching bank account details: " + e);
-            }
-        }).start();
-    }
 
     private void payConnectedUser(String senderAccountId, String recipientAccountId, int amountInCents) {
         new Thread(() -> {
-           try {
-               OkHttpClient client = new OkHttpClient();
+            try {
+                OkHttpClient client = new OkHttpClient();
 
-               //SET TEST AMOUNT IN CENTS!!
-               RequestBody requestBody = new FormBody.Builder()
-                       .add("amount", String.valueOf(amountInCents)) //Amount in cents
-                       .add("currency", "usd")
-                       .add("payment_method_types[]", "card")
-                       .add("description", "Payment from one user to another")
-                       .add("confirm", "true")
-                       .add("on_behalf_of", senderAccountId)
-                       .add("transfer_data[destination]", recipientAccountId)
-                       .build();
+                //SET TEST AMOUNT IN CENTS!!
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("amount", String.valueOf(amountInCents)) //Amount in cents
+                        .add("currency", "usd")
+                        .add("payment_method_types[]", "card")
+                        .add("description", "Payment from one user to another")
+                        .add("confirm", "true")
+                        .add("on_behalf_of", senderAccountId)
+                        .add("transfer_data[destination]", recipientAccountId)
+                        .build();
 
-               Request request = new Request.Builder()
-                       .url("https://api.stripe.com/v1/payment_intents")
-                       .post(requestBody)
-                       .addHeader("Authorization", "Bearer " + STRIPE_API_KEY)
-                       .build();
+                Request request = new Request.Builder()
+                        .url("https://api.stripe.com/v1/payment_intents")
+                        .post(requestBody)
+                        .addHeader("Authorization", "Bearer " + STRIPE_API_KEY)
+                        .build();
 
-               Response response = client.newCall(request).execute();
-               String body = response.body().string();
+                Response response = client.newCall(request).execute();
+                String body = response.body().string();
 
-               if(response.isSuccessful()) {
-                   Log.i(TAG, "Payment sucessful: $ " + (amountInCents / 100.0));
-                   Log.d(TAG, "Response: " + body);
-               } else {
-                   Log.e(TAG, "Transfer failed. HTTP " + response.code());
-                   Log.e(TAG, "BODY: " + response.body().string());
-               }
-           } catch(Exception e) {
-               Log.e(TAG, "Error sending payment: " + e);
-           }
+                if(response.isSuccessful()) {
+                    Log.i(TAG, "Payment sucessful: $ " + (amountInCents / 100.0));
+                    Log.d(TAG, "Response: " + body);
+                } else {
+                    Log.e(TAG, "Transfer failed. HTTP " + response.code());
+                    Log.e(TAG, "BODY: " + response.body().string());
+                }
+            } catch(Exception e) {
+                Log.e(TAG, "Error sending payment: " + e);
+            }
         }).start();
     }
 
@@ -223,6 +177,7 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
         String inputCode = textbox.getText().toString();
         this.code = inputCode;
         textbox.setText("");
-        handleOAuthCallback(inputCode);
+        Log.i(TAG, "TEST WORKS!!!!");
+        PayAllOtherUsers(inputCode);
     }
 }
