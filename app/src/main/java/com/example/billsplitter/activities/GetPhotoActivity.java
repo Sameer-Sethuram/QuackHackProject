@@ -84,6 +84,7 @@ public class GetPhotoActivity extends AppCompatActivity {
                                 mainBinding.imageAddNext.setOnClickListener(view -> {
                                     Toast.makeText(GetPhotoActivity.this, "Processing Image...", Toast.LENGTH_SHORT).show();
                                     // Add image processing or other actions here
+                                    mainBinding.imageAddNext.setEnabled(false);
                                 });
 
                             }
