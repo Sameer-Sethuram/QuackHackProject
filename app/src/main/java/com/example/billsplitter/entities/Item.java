@@ -14,7 +14,8 @@ public class Item {
     @PrimaryKey(autoGenerate = true)
     public int itemId;
     public int itemBillId;
-    public double amount;
+    public double base_amount;
+    public double total_amount;
     public int purchaserId;
     public String displayName;
 
@@ -23,10 +24,12 @@ public class Item {
     }
     public Item(int itemBillId, double amount, int purchaserId, String displayName){
         this.itemBillId = itemBillId;
-        this.amount = amount;
+        this.base_amount = base_amount;
+        this.total_amount = -1;
         this.purchaserId = purchaserId;
         this.displayName = displayName;
     }
+
 
     public Item(int itemBillId, double amount, String displayName) {
         this.itemBillId = itemBillId;
