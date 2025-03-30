@@ -113,7 +113,7 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
                     Log.i(TAG, "Connected account ID: " + connectedAccountId);
                     Log.i(TAG, "Access token: " + accessToken);
                     fetchBankAccountDetails(connectedAccountId);
-                    payConnectedUser(connectedAccountId);
+                    //payConnectedUser(connectedAccountId);
 
                 } else {
                     Log.e(TAG, "Stripe OAuth failed: HTTP " + response.code());
@@ -156,6 +156,7 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
                         Log.i(TAG, "Last 4 digits: " + lastFour);
 
                         Intent intent = new Intent(this, RegisterUsersActivity.class);
+                        intent.putExtra("ROUTING_NUMBER", routingNumber);
                         startActivity(intent);
 
                     } else {
@@ -170,32 +171,34 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
         }).start();
     }
 
-    private void payConnectedUser(String connectedAccountID) {
+    private void payConnectedUser(String senderAccountId, String recipientAccountId, int amountInCents) {
         new Thread(() -> {
            try {
                OkHttpClient client = new OkHttpClient();
 
                //SET TEST AMOUNT IN CENTS!!
                RequestBody requestBody = new FormBody.Builder()
-                       .add("amount", "500") //Amount in cents
+                       .add("amount", String.valueOf(amountInCents)) //Amount in cents
                        .add("currency", "usd")
-                       .add("destination", connectedAccountID)
+                       .add("payment_method_types[]", "card")
+                       .add("description", "Payment from one user to another")
+                       .add("confirm", "true")
+                       .add("on_behalf_of", senderAccountId)
+                       .add("transfer_data[destination]", recipientAccountId)
                        .build();
 
                Request request = new Request.Builder()
-                       .url("https://api.stripe.com/v1/transfers")
+                       .url("https://api.stripe.com/v1/payment_intents")
                        .post(requestBody)
                        .addHeader("Authorization", "Bearer " + STRIPE_API_KEY)
                        .build();
 
                Response response = client.newCall(request).execute();
+               String body = response.body().string();
 
                if(response.isSuccessful()) {
-                   String responseBody = response.body().string();
-                   JSONObject json = new JSONObject(responseBody);
-                   String transferId = json.getString("id");
-
-                   Log.i(TAG, "Transfer sucessful: " + transferId);
+                   Log.i(TAG, "Payment sucessful: $ " + (amountInCents / 100.0));
+                   Log.d(TAG, "Response: " + body);
                } else {
                    Log.e(TAG, "Transfer failed. HTTP " + response.code());
                    Log.e(TAG, "BODY: " + response.body().string());
@@ -204,6 +207,15 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
                Log.e(TAG, "Error sending payment: " + e);
            }
         }).start();
+    }
+
+    private void PayAllOtherUsers(String payerAccountId) {
+
+//        for(String recipientAccountId : stripeAccountList) {
+//            if(!recipientAccountId.equals(payerAccountId)) {
+//                payConnectedUser(recipientAccountId);
+//            }
+//        }
     }
 
     @Override

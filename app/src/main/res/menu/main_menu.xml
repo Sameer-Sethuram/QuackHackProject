@@ -10,4 +10,7 @@
     <item
         android:id="@+id/register"
         android:title="@string/register" />
+    <item
+        android:id="@+id/get_photo"
+        android:title="@string/scan_photo" />
 </menu>
