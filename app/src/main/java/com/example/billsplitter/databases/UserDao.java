@@ -15,36 +15,39 @@ import java.util.List;
 @Dao
 public abstract class UserDao {
 
+    // GET ALL USERS
     @Query("SELECT * FROM user")
     public abstract LiveData<List<User>> fetchAllUsers();
 
+    // GET A USER USING THEIR USERID
     @Query("SELECT * FROM user WHERE userId = :userId")
-    public abstract LiveData<List<User>> fetchUserById(int userId);
+    public abstract LiveData<User> fetchUserById(int userId);
 
+    // GET A USER USING THEIR USERNAME
     @Query("SELECT * FROM user WHERE userName = :userName")
-    public abstract LiveData<List<User>> fetchUserByName(String userName);
+    public abstract LiveData<User> fetchUserByName(String userName);
 
+    // GET THE USERS WHO OWE SOME OTHER USER SOME AMOUNT OF MONEY GRAEATER THAN 0
     @Query("SELECT * FROM user WHERE amountOwed > 0")
     public abstract LiveData<List<User>> usersWhoOwe();
 
+    // GET THE USERS WHO ARE OWED MONEY BY OTHER USERS
     @Query("SELECT * FROM user WHERE amountOwing > 0")
     public abstract LiveData<List<User>> usersWhoAreOwed();
 
-    @Query("UPDATE User SET amountOwed = :amountOwed, amountOwing = :amountOwing, balance = :balance WHERE userId = :userId")
-    void updateUserFinance(int userId, double amountOwed, double amountOwing, double balance);
+    // GET THE BALANACE OF A SPECIFIC USER USING THEIR USERID
+    @Query("SELECT balance FROM user WHERE userId = :userId")
+    public abstract LiveData<double> fetchBalanceOfUser(int userId);
 
-    // DELETE A USER FROM THE DATABASE
-    @Query("DELETE FROM User WHERE userId = :userId")
-    void deleteUserById(int userId);
+    // GET THE BALANCE OF A SPECIFIC USER USING THEIR USERNAME
+    @Query("SELECT balance FROM user WHERE userName = :userName")
+    public abstract LiveData<double> fetchBalanceOfUserName(String userName);
 
-
+    // INSERT A NEW USER FROM THE DATABASE
     @Insert
     protected abstract void insert(User user);
 
-    /**
-     * Updates an item using the item as a parameter.
-     * @param item
-     */
+    // UPDATE THE DATA OF AN EXISTING USER IN THE DATABASE
     @Update
     protected abstract void update(User user);
 
@@ -53,7 +56,6 @@ public abstract class UserDao {
      * Update the item record if it does exist.
      * @param item
      */
-
     @Transaction
     public void upsert(User user) {
         int id = user.userId;
