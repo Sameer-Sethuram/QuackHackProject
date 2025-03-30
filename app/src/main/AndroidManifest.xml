@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,7 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BillSplitter"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".activities.AddBillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddTaxTipActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.ViewUserActivity"
             android:exported="false" />
@@ -21,27 +27,30 @@
             android:name=".activities.RegisterUsersActivity"
             android:exported="false" />
         <activity android:name=".activities.StripeConnect" />
-        <activity android:name=".activities.AddBillActivity" />
+        <activity android:name=".activities.AddItemsActivity" />
         <activity android:name=".activities.ViewUsersActivity" />
         <activity
             android:name=".activities.MainActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-                android:name=".activities.StripeOAuthCallbackActivity"
-                android:exported="true">
+            android:name=".activities.StripeOAuthCallbackActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--Custom URI scheme for redirect-->
-                <data android:scheme="quackhackproject" android:host="stripe" android:path="/oauth/callback" />
+                <!-- Custom URI scheme for redirect -->
+                <data
+                    android:host="stripe"
+                    android:path="/oauth/callback"
+                    android:scheme="quackhackproject" />
             </intent-filter>
         </activity>
     </application>

@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
-import android.widget.Toolbar;
 
 import com.example.billsplitter.R;
 import com.example.billsplitter.databases.TabDatabase;
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             startActivity(intent);
             return true;
         }else if(itemId==R.id.add_bill) {
-            intent = new Intent(this, AddBillActivity.class);
+            intent = new Intent(this, AddItemsActivity.class);
             startActivity(intent);
             return true;
 //        }else if(itemId==R.id.register_user){
