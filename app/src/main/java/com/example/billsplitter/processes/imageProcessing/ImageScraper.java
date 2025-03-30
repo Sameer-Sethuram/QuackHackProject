@@ -96,7 +96,6 @@ public class ImageScraper
                 processing = false;
             }
         }).start();
-        return;
     }
 
     //Tesseract OCR
@@ -189,7 +188,7 @@ public class ImageScraper
                 Log.e(TAG, "getItemFromStr: Match caused exception when attempting to create item object!", e);
                 continue;
             }
-            Log.d(TAG, String.format("getItemsFromStr: New item found: [Name: %s, Cost: %,.2f]", curItem.displayName, curItem.amount));
+            Log.d(TAG, String.format("getItemsFromStr: New item found: [Name: %s, Cost: %,.2f]", curItem.displayName, curItem.base_amount));
             currentItemList.add(curItem);
         }
         Item[] returnArr = new Item[currentItemList.size()];

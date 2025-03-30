@@ -22,7 +22,7 @@ public class Item {
     public Item(){
 
     }
-    public Item(int itemBillId, double amount, int purchaserId, String displayName){
+    public Item(int itemBillId, double base_amount, int purchaserId, String displayName){
         this.itemBillId = itemBillId;
         this.base_amount = base_amount;
         this.total_amount = -1;
@@ -31,9 +31,9 @@ public class Item {
     }
 
 
-    public Item(int itemBillId, double amount, String displayName) {
+    public Item(int itemBillId, double base_amount, String displayName) {
         this.itemBillId = itemBillId;
-        this.amount = amount;
+        this.base_amount = base_amount;
         this.displayName = displayName;
         this.purchaserId = -1;
     }
