@@ -61,6 +61,8 @@ public class AddTaxTipActivity extends AppCompatActivity implements OnClickListe
         bill.tax = tax;
         bill.tip = tip;
 
+        bill.total = bill.subtotal+tax+tip;
+
         tabdb.billDao().upsert(bill);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
