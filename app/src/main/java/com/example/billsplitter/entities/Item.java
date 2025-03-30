@@ -30,8 +30,8 @@ public class Item {
     }
 
     public Item(int itemBillId, double amount) {
-        this.itemBillId = itemBillId;
-        this.amount = amount;
-        this.purchaserId = -1;
+//        this.itemBillId = itemBillId;
+//        this.amount = amount;
+//        this.purchaserId = -1;
     }
 }
