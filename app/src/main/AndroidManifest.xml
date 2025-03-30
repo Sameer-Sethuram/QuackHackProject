@@ -15,13 +15,22 @@
         android:theme="@style/Theme.BillSplitter"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ViewBillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddBillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddTaxTipActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ViewUserActivity"
             android:exported="false" />
         <activity
             android:name=".activities.RegisterUsersActivity"
             android:exported="false" />
         <activity android:name=".activities.StripeConnect" />
-        <activity android:name=".activities.AddBillActivity" />
+        <activity android:name=".activities.AddItemsActivity" />
         <activity android:name=".activities.ViewUsersActivity" />
         <activity
             android:name=".activities.MainActivity"
@@ -30,6 +39,21 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.StripeOAuthCallbackActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Custom URI scheme for redirect -->
+                <data
+                    android:host="stripe"
+                    android:path="/oauth/callback"
+                    android:scheme="quackhackproject" />
             </intent-filter>
         </activity>
     </application>

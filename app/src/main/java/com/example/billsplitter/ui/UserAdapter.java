@@ -20,7 +20,6 @@ public class UserAdapter extends ExtendedAdapter<User>{
     @Override
     public void setFields(User user, View view) {
         TextView userName = view.findViewById(R.id.user_header);
-        Log.d(TAG, "HELP " + user.userName);
         userName.setText(user.userName);
         TextView balance = view.findViewById(R.id.user_balance);
         balance.setText(String.valueOf(user.balance));

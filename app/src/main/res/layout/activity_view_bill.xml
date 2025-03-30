@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_bill"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".activities.ViewBillActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="35dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:padding="20dp"
+        android:text="@string/view_bill_details"/>
+
+    <TextView
+        android:id="@+id/view_bill_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:padding="20dp"
+        android:text="@string/view_bill_name" />
+
+    <TextView
+        android:id="@+id/view_purchaser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:padding="20dp"
+        android:text="@string/view_bill_purchaser_name" />
+
+    <TextView
+        android:id="@+id/view_subtotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:padding="20dp"
+        android:text="@string/view_bill_subtotal" />
+
+    <TextView
+        android:id="@+id/view_tax"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:padding="20dp"
+        android:text="@string/view_bill_tax" />
+
+    <TextView
+        android:id="@+id/view_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:padding="20dp"
+        android:text="@string/view_bill_tip" />
+
+    <TextView
+        android:id="@+id/view_total"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:padding="20dp"
+        android:text="@string/view_bill_total" />
+</LinearLayout>

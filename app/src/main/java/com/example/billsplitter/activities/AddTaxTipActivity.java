@@ -3,9 +3,9 @@ package com.example.billsplitter.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.view.View.OnClickListener;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,21 +16,26 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.billsplitter.R;
 import com.example.billsplitter.databases.TabDatabase;
 import com.example.billsplitter.entities.Bill;
-import com.example.billsplitter.entities.User;
 
-public class AddBillActivity extends AppCompatActivity implements OnClickListener {
-
+public class AddTaxTipActivity extends AppCompatActivity implements OnClickListener {
     private TabDatabase tabdb;
 
-    EditText billNametb;
-    EditText userNametb;
+    private EditText taxtb;
+    private EditText tiptb;
+
+    private double tax;
+    private double tip;
+
+    private Bill bill;
+
+    public final static String ADD_TAX_TIP_KEY = "taxtip";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_add_bill);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.add_bill), (v, insets) -> {
+        setContentView(R.layout.activity_add_tax_tip);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.add_tax_tip), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -38,23 +43,26 @@ public class AddBillActivity extends AppCompatActivity implements OnClickListene
 
         tabdb = TabDatabase.getInstance(getApplicationContext());
 
-        billNametb = findViewById(R.id.add_bill_name_text);
-        userNametb = findViewById(R.id.add_user_name_text);
+        bill = tabdb.billDao().fetchBillFromName(getIntent().getExtras().getString(ADD_TAX_TIP_KEY));
 
-        Button button = findViewById(R.id.add_bill_button);
+        taxtb = findViewById(R.id.tax_text);
+        tiptb = findViewById(R.id.tip_text);
+
+        Button button = findViewById(R.id.add_tax_tip_button);
         button.setOnClickListener(this);
+
 
     }
     @Override
     public void onClick(View v){
-        User user = tabdb.userDao().fetchUserByName(userNametb.getText().toString());
-        if(user!=null){
-            Bill bill = new Bill(user.userId, billNametb.getText().toString(), 0, 0, 0);
-            tabdb.billDao().upsert(bill);
-            Intent intent = new Intent(this, AddItemsActivity.class);
-            intent.putExtra(AddItemsActivity.ADD_ITEMS_KEY, bill.name);
-            startActivity(intent);
-        }
-        userNametb.setText("");
+        tax = Double.parseDouble(taxtb.getText().toString());
+        tip = Double.parseDouble(tiptb.getText().toString());
+
+        bill.tax = tax;
+        bill.tip = tip;
+
+        tabdb.billDao().upsert(bill);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
