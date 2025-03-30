@@ -19,16 +19,16 @@ public abstract class ItemDao {
     public abstract LiveData<List<Item>> fetchAllItems();
 
     // GETS AN ITEM BASED ON ITS ITEMID
-    @Query("SELECT item FROM item WHERE itemId = :itemId")
+    @Query("SELECT * FROM item WHERE itemId = :itemId")
     public abstract Item fetchItemById(int itemId);
 
     // GETS THE AMOUNT OF AN ITEM BASED ON ITS ITEMID
     @Query("SELECT amount FROM item WHERE itemId = :itemId")
-    public abstract Item fetchItemAmount(int itemId);
+    public abstract double fetchItemAmount(int itemId);
 
     // GETS THE ITEM BASED ON THE PURCHASER ID
     @Query("SELECT * FROM item WHERE purchaserId = :purchaserId")
-    public abstract Item fetchItemWithPurchaseId(int purcahserId);
+    public abstract Item fetchItemWithPurchaseId(int purchaserId);
 
     // GETS THE PURCHASER ID BASED ON THE ITEMID
     @Query("SELECT purchaserId FROM item WHERE itemId = :itemId")

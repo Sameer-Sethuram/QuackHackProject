@@ -58,7 +58,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/add_bill_next"
+        android:id="@+id/add_tax_tip_button"
         android:text="@string/add_tax_and_tip"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 

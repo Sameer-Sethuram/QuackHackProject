@@ -8,6 +8,10 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="35dp"/>
+
     <ListView
         android:id="@+id/bill_list"
         android:layout_width="match_parent"

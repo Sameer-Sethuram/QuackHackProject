@@ -15,16 +15,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.billsplitter.R;
 import com.example.billsplitter.databases.TabDatabase;
+import com.example.billsplitter.entities.Bill;
 import com.example.billsplitter.ui.BillAdapter;
 
 
-public class MainActivity extends AppCompatActivity implements OnClickListener{
+public class MainActivity extends AppCompatActivity implements OnClickListener, AdapterView.OnItemClickListener{
 
     private static final String TAG = MainActivity.class.getCanonicalName();
+
+    private BillAdapter billAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +41,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        BillAdapter billAdapter = new BillAdapter(this);
+        billAdapter = new BillAdapter(this);
         ListView billList = findViewById(R.id.bill_list);
         billList.setAdapter(billAdapter);
 
         TabDatabase tabdb = TabDatabase.getInstance(getApplicationContext());
+
+        tabdb.billDao().fetchAllBills().observe(this, bll -> {
+           billAdapter.setElements(bll);
+           billAdapter.notifyDataSetChanged();
+        });
+
+        billList.setOnItemClickListener(this);
 
     }
 
@@ -71,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             startActivity(intent);
             return true;
         }else if(itemId==R.id.add_bill) {
-            intent = new Intent(this, AddItemsActivity.class);
+            intent = new Intent(this, AddBillActivity.class);
             startActivity(intent);
             return true;
 //        }else if(itemId==R.id.register_user){
@@ -82,5 +94,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         }else{
             return false;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+        Bill bill = billAdapter.getItem(position);
+
+        Intent intent = new Intent(this, ViewBillActivity.class);
+        intent.putExtra(ViewBillActivity.BILL_KEY, bill.name);
+        startActivity(intent);
     }
 }
