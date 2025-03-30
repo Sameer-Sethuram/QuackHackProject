@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             return true;
         }else if(itemId==R.id.add_bill) {
             intent = new Intent(this, AddBillActivity.class);
+        }else if(itemId==R.id.get_photo){
+            intent = new Intent(this, GetPhotoActivity.class);
             startActivity(intent);
             return true;
 //        }else if(itemId==R.id.register_user){
@@ -98,9 +100,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 //            startActivity(intent);
 //            return true;
 //        }
-        }else{
+        }
+        else{
             return false;
         }
+        return false;
     }
 
     @Override
