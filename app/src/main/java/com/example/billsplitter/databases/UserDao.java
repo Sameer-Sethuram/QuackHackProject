@@ -21,11 +21,11 @@ public abstract class UserDao {
 
     // GET A USER USING THEIR USERID
     @Query("SELECT * FROM user WHERE userId = :userId")
-    public abstract LiveData<User> fetchUserById(int userId);
+    public abstract User fetchUserById(int userId);
 
     // GET A USER USING THEIR USERNAME
     @Query("SELECT * FROM user WHERE userName = :userName")
-    public abstract LiveData<User> fetchUserByName(String userName);
+    public abstract User fetchUserByName(String userName);
 
     // GET THE USERS WHO OWE SOME OTHER USER SOME AMOUNT OF MONEY GRAEATER THAN 0
     @Query("SELECT * FROM user WHERE amountOwed > 0")
@@ -37,11 +37,11 @@ public abstract class UserDao {
 
     // GET THE BALANACE OF A SPECIFIC USER USING THEIR USERID
     @Query("SELECT balance FROM user WHERE userId = :userId")
-    public abstract LiveData<double> fetchBalanceOfUser(int userId);
+    public abstract double fetchBalanceOfUser(int userId);
 
     // GET THE BALANCE OF A SPECIFIC USER USING THEIR USERNAME
     @Query("SELECT balance FROM user WHERE userName = :userName")
-    public abstract LiveData<double> fetchBalanceOfUserName(String userName);
+    public abstract double fetchBalanceOfUserName(String userName);
 
     // INSERT A NEW USER FROM THE DATABASE
     @Insert

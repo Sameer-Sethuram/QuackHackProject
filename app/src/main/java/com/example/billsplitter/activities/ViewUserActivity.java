@@ -33,7 +33,7 @@ public class ViewUserActivity extends AppCompatActivity {
         tabdb = TabDatabase.getInstance(getApplicationContext());
 
         int userid = getIntent().getExtras().getInt("VIEW_USER_KEY");
-        //User user = tabdb.userDao().fetchUserById(userid);
+        User user = tabdb.userDao().fetchUserById(userid);
 
     }
 

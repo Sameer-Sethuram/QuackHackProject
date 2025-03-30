@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toolbar;
 
 import com.example.billsplitter.R;
+import com.example.billsplitter.databases.TabDatabase;
 import com.example.billsplitter.ui.BillAdapter;
 
 
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         BillAdapter billAdapter = new BillAdapter(this);
         ListView billList = findViewById(R.id.bill_list);
         billList.setAdapter(billAdapter);
+
+        TabDatabase tabdb = TabDatabase.getInstance(getApplicationContext());
+        
 
     }
 
