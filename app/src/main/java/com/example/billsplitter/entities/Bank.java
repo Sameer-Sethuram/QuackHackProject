@@ -24,8 +24,7 @@ public class Bank {
 
     }
 
-    public Bank(int bankId, int bankerUserId, int bankAccount, int routingNumber){
-        this.bankId = bankId;
+    public Bank(int bankerUserId, int bankAccount, int routingNumber){
         this.bankerUserId = bankerUserId;
         this.bankAccount = bankAccount;
         this.routingNumber = routingNumber;
