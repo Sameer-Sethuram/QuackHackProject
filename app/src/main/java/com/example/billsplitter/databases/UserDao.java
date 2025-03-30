@@ -14,8 +14,9 @@ import java.util.List;
 
 @Dao
 public abstract class UserDao {
+
     @Query("SELECT * FROM user")
     public abstract LiveData<List<User>> fetchAllUsers();
 
-    
+
 }
