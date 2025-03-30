@@ -29,13 +29,15 @@ public abstract class UserDao {
 
     @Query("SELECT * FROM user WHERE amountOwing > 0")
     public abstract LiveData<List<User>> usersWhoAreOwed();
+/*
 
-    @Query("UPDATE User SET amountOwed = :amountOwed, amountOwing = :amountOwing, balance = :balance WHERE userId = :userId")
+    @Update("UPDATE User SET amountOwed = :amountOwed, amountOwing = :amountOwing, balance = :balance WHERE userId = :userId")
     void updateUserFinance(int userId, double amountOwed, double amountOwing, double balance);
 
     // DELETE A USER FROM THE DATABASE
     @Query("DELETE FROM User WHERE userId = :userId")
     void deleteUserById(int userId);
+*/
 
 
     @Insert
