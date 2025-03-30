@@ -40,6 +40,8 @@ public class GetPhotoActivity extends AppCompatActivity {
         mainBinding = ActivityGetPhotoBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot()); // FIXED: Set the correct content view
 
+        mainBinding.imageAddNext.setEnabled(false);
+
         // Adjust window insets properly
         ViewCompat.setOnApplyWindowInsetsListener(mainBinding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -76,6 +78,14 @@ public class GetPhotoActivity extends AppCompatActivity {
                             if (result) {
                                 mainBinding.imageView.setImageURI(null);
                                 mainBinding.imageView.setImageURI(imageUri);
+
+                                // Enable another button after taking a picture
+                                mainBinding.imageAddNext.setEnabled(true);
+                                mainBinding.imageAddNext.setOnClickListener(view -> {
+                                    Toast.makeText(GetPhotoActivity.this, "Processing Image...", Toast.LENGTH_SHORT).show();
+                                    // Add image processing or other actions here
+                                });
+
                             }
                         } catch (Exception e) {
                             e.getStackTrace();
