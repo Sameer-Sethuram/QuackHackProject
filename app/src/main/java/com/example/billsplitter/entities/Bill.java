@@ -15,6 +15,8 @@ public class Bill {
     public double tax;
     public double tip;
     public double total;
+    public boolean taxEven;
+    public boolean tipEven;
     public Bill(){
 
     }

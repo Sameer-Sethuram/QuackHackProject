@@ -1,5 +1,16 @@
 package com.example.billsplitter.processes;
+import android.content.Context;
+
+import androidx.lifecycle.LiveData;
+
+import com.example.billsplitter.databases.TabDatabase;
+import com.example.billsplitter.entities.Bill;
+import com.example.billsplitter.entities.Cost;
 import com.example.billsplitter.entities.Item;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /*
 Calculates what everyone owes, tax and gratuity, based on if the bill is split equally or not.
@@ -36,6 +47,19 @@ public class Algorithm {
         else {
             return new Item[0];
         }
+    }
+
+    public void costCalculator(boolean equalSplit, Bill bill, Context context){
+        TabDatabase tabdb = TabDatabase.getInstance(context);
+
+        List<Cost> costList = new ArrayList<Cost>();
+
+        /*tabdb.itemDao().fetchItemsUnderBill(bill.billId).observe(this, itm -> {
+            costList.add(new Cost())
+        });*/
+        LiveData<List<Item>> itemList = tabdb.itemDao().fetchItemsUnderBill(bill.billId);
+
+
     }
 
 }

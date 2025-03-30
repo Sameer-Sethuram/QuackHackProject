@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import android.view.View.OnClickListener;
 
 import com.example.billsplitter.R;
+import com.example.billsplitter.databases.TabDatabase;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -170,6 +171,11 @@ public class StripePayment extends AppCompatActivity implements OnClickListener 
 //                payConnectedUser(recipientAccountId);
 //            }
 //        }
+        TabDatabase tabdb = TabDatabase.getInstance(getApplicationContext());
+        tabdb.userDao().fetchAllUsers().observe(this, users -> {
+
+        });
+
     }
 
     @Override

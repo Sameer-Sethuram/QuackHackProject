@@ -2,6 +2,7 @@ package com.example.billsplitter.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +25,7 @@ public class ViewUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_view_user);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.view_user), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -32,8 +33,13 @@ public class ViewUserActivity extends AppCompatActivity {
 
         tabdb = TabDatabase.getInstance(getApplicationContext());
 
-        int userid = getIntent().getExtras().getInt("VIEW_USER_KEY");
-        User user = tabdb.userDao().fetchUserById(userid);
+        String username = getIntent().getExtras().getString("VIEW_USER_KEY");
+        User user = tabdb.userDao().fetchUserByName(username);
+
+        TextView name = findViewById(R.id.view_user_name);
+        name.setText(getString(R.string.view_user_name, user.userName));
+        TextView total = findViewById(R.id.view_user_balance);
+        total.setText(getString(R.string.view_user_balance, user.balance));
 
     }
 
