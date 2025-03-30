@@ -1,5 +1,6 @@
 package com.example.billsplitter.activities;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,12 +18,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import android.Manifest;
 import com.example.billsplitter.R;
-//import com.example.billsplitter.databinding.ActivityGetPhotoBinding;  // FIXED: Use the correct binding
 import com.example.billsplitter.databinding.ActivityGetPhotoBinding;
 
 import java.io.File;
+
 
 public class GetPhotoActivity extends AppCompatActivity {
 
@@ -61,7 +61,7 @@ public class GetPhotoActivity extends AppCompatActivity {
         File imageFile = new File(getApplicationContext().getFilesDir(), "camera_photo.jpg");
         return FileProvider.getUriForFile(
                 getApplicationContext(),
-                "com.example.billsplitter.fileProvider",
+                "com.example.billsplitter.fileprovider",
                 imageFile
         );
     }
