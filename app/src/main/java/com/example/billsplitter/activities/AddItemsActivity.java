@@ -58,8 +58,11 @@ public class AddItemsActivity extends AppCompatActivity implements View.OnClickL
         nametb = findViewById(R.id.add_item_name_text);
         costtb = findViewById(R.id.add_item_cost_text);
 
-        Button button = findViewById(R.id.add_item_button);
-        button.setOnClickListener(this);
+        Button button1 = findViewById(R.id.add_item_button);
+        button1.setOnClickListener(this);
+
+        Button button2 = findViewById(R.id.add_tax_tip_button);
+        button2.setOnClickListener(this);
 
     }
 
@@ -78,12 +81,13 @@ public class AddItemsActivity extends AppCompatActivity implements View.OnClickL
 
             tabdb.itemDao().upsert(item);
 
-            bill.subtotal+=item.amount;
+            bill.subtotal+=item.base_amount;
 
             nametb.setText("");
             costtb.setText("");
 
         }else if(id==R.id.add_tax_tip_button){
+            Log.d(TAG, "tax tip button pressed!");
             Intent intent = new Intent(this, AddTaxTipActivity.class);
             tabdb.billDao().upsert(bill);
             intent.putExtra(AddTaxTipActivity.ADD_TAX_TIP_KEY, bill.name);

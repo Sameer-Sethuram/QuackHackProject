@@ -29,9 +29,9 @@ public class Item {
         this.purchaserId = purchaserId;
     }
 
-    public Item(int itemBillId, double amount) {
-//        this.itemBillId = itemBillId;
-//        this.amount = amount;
-//        this.purchaserId = -1;
-    }
+    /*public Item(int itemBillId, double amount) {
+        this.itemBillId = itemBillId;
+        this.amount = amount;
+        this.purchaserId = -1;
+    }*/
 }
