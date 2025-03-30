@@ -50,4 +50,5 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     annotationProcessor(libs.room.compiler)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
