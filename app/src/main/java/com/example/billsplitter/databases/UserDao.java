@@ -59,7 +59,7 @@ public abstract class UserDao {
     @Transaction
     public void upsert(User user) {
         int id = user.userId;
-        if (id == 0) {
+        if (id == -1) {
             // TODO
             insert(user);
         } else {

@@ -61,7 +61,7 @@ public abstract class ItemDao {
     @Transaction
     public void upsert(Item item) {
         int id = item.itemId;
-        if (id == 0) {
+        if (id == -1) {
             // TODO
             insert(item);
         } else {

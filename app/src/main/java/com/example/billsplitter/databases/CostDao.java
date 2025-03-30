@@ -57,7 +57,7 @@ public abstract class CostDao {
     @Transaction
     public void upsert(Cost cost) {
         int id = cost.costId;
-        if (id == 0) {
+        if (id == -1) {
             insert(cost);
         }
         else {
