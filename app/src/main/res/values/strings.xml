@@ -31,10 +31,10 @@
     <string name="view_bill_details">Bill Details</string>
     <string name="view_bill_name">Name: %s</string>
     <string name="view_bill_purchaser_name">Purchaser: %s</string>
-    <string name="view_bill_subtotal">Subtotal: %d</string>
-    <string name="view_bill_tax">Tax: %d</string>
-    <string name="view_bill_tip">Tip: %d</string>
-    <string name="view_bill_total">Total: %d</string>
+    <string name="view_bill_subtotal">Subtotal: %f</string>
+    <string name="view_bill_tax">Tax: %f</string>
+    <string name="view_bill_tip">Tip: %f</string>
+    <string name="view_bill_total">Total: %f</string>
 
 
 </resources>

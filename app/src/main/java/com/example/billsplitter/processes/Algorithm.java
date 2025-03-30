@@ -1,6 +1,5 @@
 package com.example.billsplitter.processes;
-import java.util.ArrayList;
-import Item.java;
+import com.example.billsplitter.entities.Item;
 
 /*
 Calculates what everyone owes, tax and gratuity, based on if the bill is split equally or not.

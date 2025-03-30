@@ -23,7 +23,7 @@ public abstract class ItemDao {
     public abstract Item fetchItemById(int itemId);
 
     // GETS THE AMOUNT OF AN ITEM BASED ON ITS ITEMID
-    @Query("SELECT amount FROM item WHERE itemId = :itemId")
+    @Query("SELECT base_amount FROM item WHERE itemId = :itemId")
     public abstract double fetchItemAmount(int itemId);
 
     // GETS THE ITEM BASED ON THE PURCHASER ID
