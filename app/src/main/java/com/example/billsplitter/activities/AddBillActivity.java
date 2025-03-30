@@ -1,6 +1,45 @@
 package com.example.billsplitter.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
 
-public class AddBillActivity extends AppCompatActivity {
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.example.billsplitter.R;
+import com.example.billsplitter.databases.TabDatabase;
+
+public class AddBillActivity extends AppCompatActivity implements View.OnClickListener{
+    private TabDatabase tabdb;
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_add_bill);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.add_bill), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        tabdb = TabDatabase.getInstance(getApplicationContext());
+
+
+
+    }
+
+    @Override
+    public void onClick(View v){
+        /*switch(v.getId()) {
+            case R.id.add_item:
+                break;
+            case R.id.next_button:
+                break;
+            default:
+                break;
+        }*/
+    }
 }

@@ -114,6 +114,7 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
                     Log.i(TAG, "Access token: " + accessToken);
                     fetchBankAccountDetails(connectedAccountId);
                     payConnectedUser(connectedAccountId);
+
                 } else {
                     Log.e(TAG, "Stripe OAuth failed: HTTP " + response.code());
                 }
@@ -153,6 +154,10 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
                         Log.i(TAG, "Bank:" + bankName);
                         Log.i(TAG, "Routing Number: " + routingNumber);
                         Log.i(TAG, "Last 4 digits: " + lastFour);
+
+                        Intent intent = new Intent(this, RegisterUsersActivity.class);
+                        startActivity(intent);
+
                     } else {
                         Log.w(TAG, "No bank accounts found.");
                     }
@@ -205,6 +210,7 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
     public void onClick(View v) {
         String inputCode = textbox.getText().toString();
         this.code = inputCode;
+        textbox.setText("");
         handleOAuthCallback(inputCode);
     }
 }
