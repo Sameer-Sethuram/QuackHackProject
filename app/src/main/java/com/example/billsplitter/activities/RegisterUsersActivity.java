@@ -1,6 +1,7 @@
 package com.example.billsplitter.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.billsplitter.R;
+import com.example.billsplitter.databases.TabDatabase;
+import com.example.billsplitter.databases.UserDao;
 import com.example.billsplitter.entities.User;
 
 public class RegisterUsersActivity extends AppCompatActivity implements OnClickListener {
@@ -20,6 +23,8 @@ public class RegisterUsersActivity extends AppCompatActivity implements OnClickL
     final static private String TAG = RegisterUsersActivity.class.getCanonicalName();
 
     final static public String USER_NAME = "name";
+
+    private TabDatabase tabdb;
 
     private EditText textbox;
 
@@ -33,15 +38,22 @@ public class RegisterUsersActivity extends AppCompatActivity implements OnClickL
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        tabdb = TabDatabase.getInstance(getApplicationContext());
+
         textbox = findViewById(R.id.register_user_text);
         Button button = findViewById(R.id.register_user_button);
         button.setOnClickListener(this);
+
 
 
     }
     @Override
     public void onClick(View v){
         String name = textbox.getText().toString();
+        Log.d(TAG, name);
         User user = new User(name);
+        UserDao userDao = tabdb.userDao();
+        userDao.upsert(user);
     }
 }

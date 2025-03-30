@@ -7,7 +7,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(indices = @Index(value="userId", unique = true))
-public class User implements Parcelable {
+public class User {
     @PrimaryKey(autoGenerate = true)
     public int userId;
     public String userName;
