@@ -53,12 +53,16 @@ public class RegisterUsersActivity extends AppCompatActivity implements OnClickL
     public void onClick(View v){
         String name = textbox.getText().toString();
         Log.d(TAG, name);
-        User user = new User(name);
+
         UserDao userDao = tabdb.userDao();
-        userDao.upsert(user);
+        BankDao bankDao = tabdb.bankDao();
+
+        User user = new User(name);
+        int userId = (int) userDao.returnId(user);
 
         String routingStr = getIntent().getStringExtra("ROUTING_NUMBER");
         Log.d(TAG, "Routing Number recieved: " + routingStr);
+
         int routingNumber = 0;
         try {
             routingNumber = Integer.parseInt(routingStr);
@@ -67,11 +71,13 @@ public class RegisterUsersActivity extends AppCompatActivity implements OnClickL
         }
 
         Bank bank = new Bank();
-        BankDao bankDao = tabdb.bankDao();
         bank.setRoutingNumber(routingNumber);
-        bank.setBankAccount(0); //however you want to do this
-        bank.bankerUserId = 0; // also however you want to do this
+        bank.bankerUserId = userId;
         bankDao.upsert(bank);
+
+        Log.d(TAG, "User inserted: name=" + user.userName + ", id=" + userId);
+        Log.d(TAG, "Bank inserted: routing=" + bank.getRoutingNumber() + ", bankerUserId=" + bank.bankerUserId);
+
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

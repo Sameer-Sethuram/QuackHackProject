@@ -67,5 +67,7 @@ public abstract class UserDao {
         }
     }
 
+    @Insert
+    public abstract long returnId(User user);
 
 }
