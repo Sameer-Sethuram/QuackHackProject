@@ -14,6 +14,28 @@ import java.util.List;
 
 @Dao
 public abstract class BillDao {
+    /**
+     * Get all the bills in the database.
+     * @return
+     */
     @Query("SELECT * FROM bill")
     public abstract LiveData<List<Bill>> fetchAllBills();
+
+    @Insert
+    protected abstract void insert(Bill bill);
+
+    @Update
+    protected abstract void update(Bill bill);
+
+    @Transaction
+    public void upsert(Bill bill) {
+        int id = bill.billId;
+        if (id == 0) {
+            insert(bill);
+        }
+        else {
+            bill.billId = id;
+            update(bill);
+        }
+    }
 }

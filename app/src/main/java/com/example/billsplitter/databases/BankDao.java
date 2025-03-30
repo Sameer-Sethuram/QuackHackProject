@@ -11,6 +11,15 @@ import com.example.billsplitter.entities.Bank;
 
 import java.util.List;
 
+import com.example.billsplitter.entities.Bank;
+
+import java.util.List;
 @Dao
 public abstract class BankDao {
+
+    @Query("SELECT * FROM bank")
+    public abstract LiveData<List<Bank>> fetchAllBankingInfo();
+
+
+
 }

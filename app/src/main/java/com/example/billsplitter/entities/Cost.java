@@ -21,8 +21,7 @@ public class Cost {
 
     }
     //Part of cost for non item
-    public Cost(int costId, int owingUserId, int owedUserId, int billId, double amount, String type){
-        this.costId = costId;
+    public Cost(int owingUserId, int owedUserId, int billId, double amount, String type){
         this.owingUserId = owingUserId;
         this.owedUserId = owedUserId;
         this.billId = billId;
@@ -30,8 +29,7 @@ public class Cost {
         this.type = type;
     }
 
-    public Cost(int costId, int owingUserId, int owedUserId, int costItemId, int billId, double amount, String type){
-        this.costId = costId;
+    public Cost(int owingUserId, int owedUserId, int costItemId, int billId, double amount, String type){
         this.owingUserId = owingUserId;
         this.owedUserId = owedUserId;
         this.costItemId = costItemId;
