@@ -26,6 +26,12 @@ public abstract class ItemDao {
     @Query("SELECT base_amount FROM item WHERE itemId = :itemId")
     public abstract double fetchItemAmount(int itemId);
 
+    @Query("SELECT total_amount FROM item WHERE owerId =:owingUserId")
+    public abstract List<Double> fetchAmountsFromOwingUserId(int owingUserId);
+
+    @Query("SELECT total_amount FROM item WHERE purchaserId =:owedUserId")
+    public abstract List<Double> fetchAmountsFromOwedUserId(int owedUserId);
+
     // GETS THE ITEM BASED ON THE PURCHASER ID
     @Query("SELECT * FROM item WHERE purchaserId = :purchaserId")
     public abstract Item fetchItemWithPurchaseId(int purchaserId);
