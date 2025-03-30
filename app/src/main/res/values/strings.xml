@@ -43,5 +43,6 @@
     <string name="confirm_text">Confirm</string>
     <string name="authenticate_pay">Authenticate and Pay</string>
     <string name="scan_photo">Scan Photo</string>
+    <string name="selected">Selected User: %s</string>
 
 </resources>

@@ -56,16 +56,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         billList.setOnItemClickListener(this);
 
         Button calculateButton = findViewById(R.id.calculate);
-        calculateButton.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, StripePayment.class);
-            startActivity(intent);
-        });
+        calculateButton.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View v) {
-
+        Intent intent = new Intent(this, StripePayment.class);
+        startActivity(intent);
     }
 
     @Override
