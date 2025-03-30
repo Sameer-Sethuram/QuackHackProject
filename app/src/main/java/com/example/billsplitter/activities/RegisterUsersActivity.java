@@ -1,5 +1,6 @@
 package com.example.billsplitter.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -55,5 +56,7 @@ public class RegisterUsersActivity extends AppCompatActivity implements OnClickL
         User user = new User(name);
         UserDao userDao = tabdb.userDao();
         userDao.upsert(user);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

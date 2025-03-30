@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         super.onOptionsItemSelected(item);
         int itemId = item.getItemId();
         Intent intent;
-        if(itemId==R.id.login){
+        if(itemId==R.id.register){
             intent = new Intent(this, StripeConnect.class);
             startActivity(intent);
             return true;
@@ -71,16 +71,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             intent = new Intent(this, ViewUsersActivity.class);
             startActivity(intent);
             return true;
-        }else if(itemId==R.id.add_bill){
-            intent = new Intent(this, ViewUsersActivity.class);
+        }else if(itemId==R.id.add_bill) {
+            intent = new Intent(this, AddBillActivity.class);
             startActivity(intent);
             return true;
-        }else if(itemId==R.id.register_user){
-            intent = new Intent(this, RegisterUsersActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        else{
+//        }else if(itemId==R.id.register_user){
+//            intent = new Intent(this, RegisterUsersActivity.class);
+//            startActivity(intent);
+//            return true;
+//        }
+        }else{
             return false;
         }
     }

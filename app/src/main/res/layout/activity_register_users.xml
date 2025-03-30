@@ -6,12 +6,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dip"
+    android:padding="10dip"
     tools:context=".activities.RegisterUsersActivity">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="30dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
