@@ -60,10 +60,8 @@ public abstract class UserDao {
     public void upsert(User user) {
         int id = user.userId;
         if (id == 0) {
-            // TODO
             insert(user);
         } else {
-            // TODO
             user.userId = id;
             update(user);
         }

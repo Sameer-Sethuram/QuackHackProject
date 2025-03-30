@@ -2,23 +2,28 @@ package com.example.billsplitter.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.billsplitter.R;
+import com.example.billsplitter.databases.TabDatabase;
 import com.example.billsplitter.entities.User;
 import com.example.billsplitter.ui.UserAdapter;
 
 public class ViewUsersActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
+    private static final String TAG = ViewUsersActivity.class.getCanonicalName();
+
     private UserAdapter userAdapter;
+    private TabDatabase tabdb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,18 @@ public class ViewUsersActivity extends AppCompatActivity implements AdapterView.
         });
 
         userAdapter = new UserAdapter(this);
+        ListView userList = findViewById(R.id.user_list);
+        userList.setAdapter(userAdapter);
 
+
+        tabdb = TabDatabase.getInstance(getApplicationContext());
+
+        tabdb.userDao().fetchAllUsers().observe(this, usr ->{
+            Log.d(TAG, usr.toString());
+            userAdapter.setElements(usr);
+            userAdapter.notifyDataSetChanged();
+        });
+        userList.setOnItemClickListener(this);
     }
 
     @Override

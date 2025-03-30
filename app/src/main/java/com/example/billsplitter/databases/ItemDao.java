@@ -40,10 +40,8 @@ public abstract class ItemDao {
     public void upsert(Item item) {
         int id = item.itemId;
         if (id == 0) {
-            // TODO
             insert(item);
         } else {
-            // TODO
             item.itemId = id;
             update(item);
         }

@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         billList.setAdapter(billAdapter);
 
         TabDatabase tabdb = TabDatabase.getInstance(getApplicationContext());
-        
 
     }
 
@@ -76,7 +75,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             intent = new Intent(this, ViewUsersActivity.class);
             startActivity(intent);
             return true;
-        }else{
+        }else if(itemId==R.id.register_user){
+            intent = new Intent(this, RegisterUsersActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        else{
             return false;
         }
     }
