@@ -2,6 +2,7 @@ package com.example.billsplitter.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,8 @@ public class AddBillActivity extends AppCompatActivity implements OnClickListene
     EditText billNametb;
     EditText userNametb;
 
+    private final static String TAG = AddBillActivity.class.getCanonicalName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +44,10 @@ public class AddBillActivity extends AppCompatActivity implements OnClickListene
         billNametb = findViewById(R.id.add_bill_name_text);
         userNametb = findViewById(R.id.add_user_name_text);
 
-        Button button = findViewById(R.id.add_bill_button);
-        button.setOnClickListener(this);
+        Button button1 = findViewById(R.id.add_bill_manual_button);
+        Button button2 = findViewById(R.id.add_bill_auto_button);
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
 
     }
     @Override
@@ -51,9 +56,17 @@ public class AddBillActivity extends AppCompatActivity implements OnClickListene
         if(user != null){
             Bill bill = new Bill(user.userId, billNametb.getText().toString(), 0, 0, 0);
             tabdb.billDao().upsert(bill);
-            Intent intent = new Intent(this, AddItemsActivity.class);
-            intent.putExtra(AddItemsActivity.ADD_ITEMS_KEY, bill.name);
-            startActivity(intent);
+
+            if(v.getId()==R.id.add_bill_manual_button) {
+                Intent intent = new Intent(this, AddItemsActivity.class);
+                intent.putExtra(AddItemsActivity.ADD_ITEMS_KEY, bill.name);
+                startActivity(intent);
+            }else if(v.getId()==R.id.add_bill_auto_button){
+                Log.d(TAG, "auto button clicked");
+                Intent intent = new Intent(this, ScrapeImageActivity.class);
+                intent.putExtra(ScrapeImageActivity.SCRAPE_KEY, bill.name);
+                startActivity(intent);
+            }
         }
         userNametb.setText("");
     }
