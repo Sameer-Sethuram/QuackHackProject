@@ -50,7 +50,10 @@ public class ScrapeImageActivity extends AppCompatActivity {
         Item[] items = ourScraper.billItems;
         for (int i = 0; i < items.length; i++) {
             tabdb.itemDao().upsert(items[i]);
+            bill.subtotal+=items[i].base_amount;
         }
+        bill.tax = ourScraper.tax;
+        bill.total = bill.tax+bill.subtotal;
         tabdb.billDao().upsert(bill);
 
         Intent intent = new Intent(this, MainActivity.class);

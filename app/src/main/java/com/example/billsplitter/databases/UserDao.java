@@ -18,6 +18,8 @@ public abstract class UserDao {
     // GET ALL USERS
     @Query("SELECT * FROM user")
     public abstract LiveData<List<User>> fetchAllUsers();
+    @Query("SELECT * FROM user")
+    public abstract List<User> getAllUsers();
 
     // GET A USER USING THEIR USERID
     @Query("SELECT * FROM user WHERE userId = :userId")

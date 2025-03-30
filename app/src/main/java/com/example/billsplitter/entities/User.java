@@ -14,6 +14,7 @@ public class User {
     public double amountOwed;
     public double amountOwing;
     public double balance;
+    public int owedUserId;
 
     public User(){
         this.amountOwed = 0;

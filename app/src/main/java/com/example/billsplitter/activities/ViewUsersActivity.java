@@ -18,6 +18,8 @@ import com.example.billsplitter.databases.TabDatabase;
 import com.example.billsplitter.entities.User;
 import com.example.billsplitter.ui.UserAdapter;
 
+import java.util.List;
+
 public class ViewUsersActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private static final String TAG = ViewUsersActivity.class.getCanonicalName();
@@ -36,13 +38,27 @@ public class ViewUsersActivity extends AppCompatActivity implements AdapterView.
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        tabdb = TabDatabase.getInstance(getApplicationContext());
+        List<User> users = tabdb.userDao().getAllUsers();
+
+        for (int i = 0; i < users.size(); i++) {
+            List<Double> negatives = tabdb.itemDao().fetchAmountsFromOwingUserId(users.get(i).userId);
+            for (Double currentVal: negatives) {
+                users.get(i).balance -= currentVal;
+            }
+            List<Double> positives = tabdb.itemDao().fetchAmountsFromOwedUserId(users.get(i).userId);
+            for (Double currentVal: positives) {
+                users.get(i).balance += currentVal;
+            }
+            tabdb.userDao().upsert(users.get(i));
+        }
 
         userAdapter = new UserAdapter(this);
         ListView userList = findViewById(R.id.user_list);
         userList.setAdapter(userAdapter);
 
 
-        tabdb = TabDatabase.getInstance(getApplicationContext());
+
 
         tabdb.userDao().fetchAllUsers().observe(this, usr ->{
             Log.d(TAG, usr.toString());
