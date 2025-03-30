@@ -16,4 +16,25 @@
     <string name="register">Register</string>
     <string name="name">Name:</string>
     <string name="enter_name">Enter name here</string>
+    <string name="item_name_hint">Enter item name here</string>
+    <string name="item_cost_hint">Enter item cost here</string>
+    <string name="add_label">ADD ITEM</string>
+    <string name="item_cost_text">Item cost: </string>
+    <string name="add_tax_and_tip">ADD TAX AND TIP</string>
+    <string name="bill_name">Enter bill name here</string>
+    <string name="user_name">User Name: </string>
+    <string name="user_name_hint">Must be valid user</string>
+    <string name="tax">Enter tax:</string>
+    <string name="tip">Enter tip:</string>
+    <string name="finish_bill">COMPLETE BILL</string>
+    <string name="tax_tip_tips">Enter tax and tip below: 0 if NA</string>
+    <string name="view_bill_details">Bill Details</string>
+    <string name="view_bill_name">Name: %s</string>
+    <string name="view_bill_purchaser_name">Purchaser: %s</string>
+    <string name="view_bill_subtotal">Subtotal: %d</string>
+    <string name="view_bill_tax">Tax: %d</string>
+    <string name="view_bill_tip">Tip: %d</string>
+    <string name="view_bill_total">Total: %d</string>
+
+
 </resources>

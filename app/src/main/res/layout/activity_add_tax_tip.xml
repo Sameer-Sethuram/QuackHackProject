@@ -2,33 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_tax_tip"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp"
-    android:id="@+id/add_bill"
-    tools:context=".activities.AddItemsActivity">
+    android:padding="10dip"
+    tools:context=".activities.AddTaxTipActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="30dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/tax_tip_tips"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="@string/user_name"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:text="@string/tax"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
         <EditText
-            android:id="@+id/add_user_name_text"
+            android:id="@+id/tax_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:hint="@string/user_name_hint"
             android:inputType="text"
             android:singleLine="true" />
     </LinearLayout>
@@ -37,22 +50,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <EditText
-            android:id="@+id/add_bill_name_text"
+
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:hint="@string/bill_name"
+            android:text="@string/tip"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/tip_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
             android:inputType="text"
             android:singleLine="true" />
-        <Button
-            android:id="@+id/add_bill_button"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:text="@string/next"
-            android:textAppearance="?android:attr/textAppearanceMedium"  />
     </LinearLayout>
 
-
+    <Button
+        android:id="@+id/add_tax_tip_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/finish_bill"/>
 </LinearLayout>

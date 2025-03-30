@@ -23,6 +23,9 @@ public abstract class BillDao {
     @Query("SELECT * FROM bill WHERE billId = :billId")
     public abstract Bill fetchBillUsingBillId(int billId);
 
+    @Query("SELECT * FROM bill WHERE name = :billName")
+    public abstract Bill fetchBillFromName(String billName);
+
     // GET PURCHASER ID USING THE BILL ID
     @Query("SELECT purchaserId FROM bill WHERE billId = :billId")
     public abstract int fetchPurchaserIdFromBillId(int billId);
