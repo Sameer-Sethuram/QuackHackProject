@@ -30,11 +30,11 @@ import org.opencv.photo.Photo;
     Assets.extractAssets(getApplicationContext());
     ImageScraper ourScraper = new ImageScraper();
     ourScraper.initTesseract(Assets.getTessDataPath(getApplicationContext()),"eng", TessBaseAPI.OEM_LSTM_ONLY);
-    ourScraper.getBillItemsFromImage(Assets.getImageFile(getApplicationContext(), "receipt3.jpg"), Assets.getIntermediaryProcessDir(getApplicationContext()), 0);
+    ourScraper.getBillItemsFromImage(Assets.getImageFile(getApplicationContext(), "receipt_photo.jpg"), Assets.getIntermediaryProcessDir(getApplicationContext()), 0);
 
     Note:
     Calls above must be done in activity context.
-    The "receipt3.jpg" can be replaced with the name of any image file as long as it is present in the app's file directory.
+    The "receipt_photo.jpg" can be replaced with the name of any image file as long as it is present in the app's file directory.
     getBillItemsFromImage is multi-threaded, therefore you must wait until ourScraper.billItems is initialized and then
     access the Items array with ourScraper.billItems as the thread will run independently.
  */

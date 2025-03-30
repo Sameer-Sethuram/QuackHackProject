@@ -77,7 +77,7 @@ public class AddItemsActivity extends AppCompatActivity implements View.OnClickL
             Log.d(TAG, "COST: " + String.valueOf(cost));
             Log.d(TAG, "Bill id: " + String.valueOf(bill.billId));
             Log.d(TAG, "Bill purchaser: " + String.valueOf(tabdb.userDao().fetchUserById(bill.purchaserId)).toString());
-            Item item = new Item(bill.billId, cost, bill.purchaserId);
+            Item item = new Item(bill.billId, cost, bill.purchaserId, name);
 
             tabdb.itemDao().upsert(item);
 

@@ -60,7 +60,7 @@ public class GetPhotoActivity extends AppCompatActivity {
     }
 
     private Uri createUri() {
-        File imageFile = new File(getApplicationContext().getFilesDir(), "camera_photo.jpg");
+        File imageFile = new File(getApplicationContext().getFilesDir(), "receipt_photo.jpg");
         return FileProvider.getUriForFile(
                 getApplicationContext(),
                 "com.example.billsplitter.fileprovider",
