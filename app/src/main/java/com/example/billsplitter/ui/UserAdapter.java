@@ -15,6 +15,6 @@ public class UserAdapter extends ExtendedAdapter<User>{
 
     @Override
     public void setFields(User element, View view) {
-        TextView userName = view.findViewById(R.id.header);
+
     }
 }

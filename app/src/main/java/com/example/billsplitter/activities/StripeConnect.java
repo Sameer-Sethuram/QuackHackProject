@@ -113,6 +113,7 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
                     Log.i(TAG, "Connected account ID: " + connectedAccountId);
                     Log.i(TAG, "Access token: " + accessToken);
                     fetchBankAccountDetails(connectedAccountId);
+                    payConnectedUser(connectedAccountId);
                 } else {
                     Log.e(TAG, "Stripe OAuth failed: HTTP " + response.code());
                 }
@@ -164,11 +165,46 @@ public class StripeConnect extends AppCompatActivity implements OnClickListener 
         }).start();
     }
 
+    private void payConnectedUser(String connectedAccountID) {
+        new Thread(() -> {
+           try {
+               OkHttpClient client = new OkHttpClient();
+
+               //SET TEST AMOUNT IN CENTS!!
+               RequestBody requestBody = new FormBody.Builder()
+                       .add("amount", "500") //Amount in cents
+                       .add("currency", "usd")
+                       .add("destination", connectedAccountID)
+                       .build();
+
+               Request request = new Request.Builder()
+                       .url("https://api.stripe.com/v1/transfers")
+                       .post(requestBody)
+                       .addHeader("Authorization", "Bearer " + STRIPE_API_KEY)
+                       .build();
+
+               Response response = client.newCall(request).execute();
+
+               if(response.isSuccessful()) {
+                   String responseBody = response.body().string();
+                   JSONObject json = new JSONObject(responseBody);
+                   String transferId = json.getString("id");
+
+                   Log.i(TAG, "Transfer sucessful: " + transferId);
+               } else {
+                   Log.e(TAG, "Transfer failed. HTTP " + response.code());
+                   Log.e(TAG, "BODY: " + response.body().string());
+               }
+           } catch(Exception e) {
+               Log.e(TAG, "Error sending payment: " + e);
+           }
+        }).start();
+    }
+
     @Override
-    public void onClick(View v){
+    public void onClick(View v) {
         String inputCode = textbox.getText().toString();
         this.code = inputCode;
         handleOAuthCallback(inputCode);
     }
-
 }
