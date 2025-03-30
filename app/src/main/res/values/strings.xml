@@ -13,4 +13,7 @@
     <string name="code">Code:</string>
     <string name="codeHint">Code From Website</string>
     <string name="authenticate">Authenticate</string>
+    <string name="register">Register</string>
+    <string name="name">Name:</string>
+    <string name="enter_name">Enter name here</string>
 </resources>

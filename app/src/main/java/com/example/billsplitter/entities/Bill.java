@@ -19,8 +19,7 @@ public class Bill {
 
     }
 
-    public Bill(int billId, int purchaserId, String name, double subtotal, double tax, double tip){
-        this.billId = billId;
+    public Bill(int purchaserId, String name, double subtotal, double tax, double tip){
         this.purchaserId = purchaserId;
         this.name = name;
         this.subtotal = subtotal;
