@@ -48,7 +48,7 @@ public class AddBillActivity extends AppCompatActivity implements OnClickListene
     @Override
     public void onClick(View v){
         User user = tabdb.userDao().fetchUserByName(userNametb.getText().toString());
-        if(true){
+        if(user != null){
             Bill bill = new Bill(user.userId, billNametb.getText().toString(), 0, 0, 0);
             tabdb.billDao().upsert(bill);
             Intent intent = new Intent(this, AddItemsActivity.class);
