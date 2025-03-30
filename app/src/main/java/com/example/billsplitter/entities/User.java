@@ -16,14 +16,24 @@ public class User {
     public double balance;
 
     public User(){
-
+        this.amountOwed = 0;
+        this.amountOwing = 0;
+        this.balance = 0;
     }
 
-    public User(int userId, String userName, double amountOwed, double amountOwing, double balance){
-        this.userId = userId;
+    public User(String userName, double amountOwed, double amountOwing, double balance){
         this.userName = userName;
         this.amountOwed = amountOwed;
         this.amountOwing = amountOwing;
         this.balance = balance;
     }
+
+    //CONSTRUCTOR MOST USED
+    public User(String userName){
+        this.userName = userName;
+        this.amountOwed = 0;
+        this.amountOwing = 0;
+        this.balance = 0;
+    }
+
 }

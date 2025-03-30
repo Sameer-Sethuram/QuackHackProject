@@ -21,16 +21,15 @@ public class Item {
     public Item(){
 
     }
-    public Item(int itemId, int itemBillId, double base_amount, int purchaserId){
-        this.itemId = itemId;
+
+    public Item(int itemBillId, double base_amount, int purchaserId){
         this.itemBillId = itemBillId;
         this.base_amount = base_amount;
         this.total_amount = -1;
         this.purchaserId = purchaserId;
     }
 
-    public Item(int itemId, int itemBillId, double amount) {
-        this.itemId = itemId;
+    public Item(int itemBillId, double amount) {
         this.itemBillId = itemBillId;
         this.amount = amount;
         this.purchaserId = -1;
