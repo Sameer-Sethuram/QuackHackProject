@@ -35,7 +35,6 @@ android {
 }
 
 dependencies {
-
     implementation("com.stripe:stripe-java:20.119.0")
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -51,5 +50,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     annotationProcessor(libs.room.compiler)
+    implementation(libs.tesseract4android) {exclude(group = "com.github.adaptech-cz.Tesseract4Android", module = "tesseract4android-openmp")}
+    implementation(libs.openCV)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
