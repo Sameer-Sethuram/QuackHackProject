@@ -35,6 +35,10 @@
     <string name="view_bill_tax">Tax: %f</string>
     <string name="view_bill_tip">Tip: %f</string>
     <string name="view_bill_total">Total: %f</string>
+    <string name="view_user_details">User Details</string>
+    <string name="view_user_name">Name: %s</string>
+    <string name="view_user_balance">Balance: %f</string>
+    <string name="item_set_user_hint">Assign user, blank or invalid user will cause to split evenly.</string>
 
 
 </resources>
